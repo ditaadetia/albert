@@ -1,0 +1,41 @@
+package com.ditadetian.pupr
+
+import com.google.gson.annotations.SerializedName
+
+data class EquipmentResponse(
+
+	val nama: String?,
+//	val foto: String?
+)
+
+//data class Equipment(
+//
+//	@field:SerializedName("equipmentItems")
+//	val equipmentItems: List<EquipmentsItem>,
+//)
+
+//data class EquipmentsItem(
+//	@field:SerializedName("kegunaan")
+//	val kegunaan: String? = null,
+//
+//	@field:SerializedName("keterangan")
+//	val keterangan: String? = null,
+//
+//	@field:SerializedName("nama")
+//	val nama: String? = null,
+//
+//	@field:SerializedName("kondisi")
+//	val kondisi: String? = null,
+//
+//	@field:SerializedName("harga_sewa_perjam")
+//	val hargaSewaPerjam: Int? = null,
+//
+//	@field:SerializedName("jenis")
+//	val jenis: String? = null,
+//
+//	@field:SerializedName("id")
+//	val id: Int? = null,
+//
+//	@field:SerializedName("harga_sewa_perhari")
+//	val hargaSewaPerhari: Int? = null
+//)
