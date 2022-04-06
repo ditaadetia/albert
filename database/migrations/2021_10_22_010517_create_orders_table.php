@@ -21,8 +21,9 @@ class CreateOrdersTable extends Migration
             $table->string('jabatan')->nullable();
             $table->string('alamat_instansi')->nullable();
             $table->string('nama_kegiatan')->default('');
-            $table->string('ktp')->default('');
             $table->string('surat_permohonan')->default('');
+            $table->longText('ttd_pemohon')->default('');
+            $table->string('ktp')->default('');
             $table->string('akta_notaris')->nullable();
             $table->string('surat_ket')->nullable();
             $table->enum('ket_verif_admin', ['belum', 'verif', 'tolak'])->default('belum');

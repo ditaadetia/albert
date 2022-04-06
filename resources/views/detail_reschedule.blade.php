@@ -79,7 +79,7 @@
           @foreach ($equipment as $equipment)
             <div class="card" style="padding:16px;">
               <div class="row">
-                <div class="col-md-4">
+                <div class="col-md-3">
                     @if($equipment->foto != '')
                         <img src="{{ asset('storage/' . $equipment->foto) }}" style="width:120px; height:120px;">
                     @else
@@ -106,25 +106,59 @@
                   @endcan
                 </div>
                 <div class="col-md-4">
-                  <h4><b>Tanggal</b></h4>
-                  <div class="tes">
-                    <p class="mt-3">Tanggal Mulai</p>
-                    <h4 class="mt--4">{{ Carbon::parse($equipment->waktu_mulai)->locale('id')->isoFormat('dddd, D MMMM YYYY') }}</h4>
-                  </div>
-                  <div class="tes">
-                    <p>Tanggal Selesai</p>
-                    <h4 class="mt--4">{{ Carbon::parse($equipment->waktu_selesai)->locale('id')->isoFormat('dddd, D MMMM YYYY') }}</h4>
+                  <h3>Waktu Awal</h3>
+                  <hr>
+                  <div class="row">
+                    <div class="col-md-6">
+                      <h4><b>Tanggal</b></h4>
+                      <div class="tes">
+                        <p class="mt-3">Tanggal Mulai</p>
+                        <h4 class="mt--4">{{ Carbon::parse($equipment->tanggal_mulai)->locale('id')->isoFormat('dddd, D MMMM YYYY') }}</h4>
+                      </div>
+                      <div class="tes">
+                        <p>Tanggal Selesai</p>
+                        <h4 class="mt--4">{{ Carbon::parse($equipment->tanggal_selesai)->locale('id')->isoFormat('dddd, D MMMM YYYY') }}</h4>
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                      <h4><b>Jam</b></h4>
+                      <div class="tes">
+                        <p class="mt-3">Jam Mulai</p>
+                        <h4 class="mt--4">{{ \Carbon\Carbon::parse($equipment->tanggal_mulai)->format('H:i') }}                    </h4>
+                      </div>
+                      <div class="tes">
+                        <p>Jam Selesai</p>
+                        <h4 class="mt--4">{{ \Carbon\Carbon::parse($equipment->tanggal_selesai)->format('H:i') }}</h4>
+                      </div>
+                    </div>
                   </div>
                 </div>
                 <div class="col-md-4">
-                  <h4><b>Jam</b></h4>
-                  <div class="tes">
-                    <p class="mt-3">Jam Mulai</p>
-                    <h4 class="mt--4">{{ \Carbon\Carbon::parse($equipment->waktu_mulai)->format('H:i') }}                    </h4>
-                  </div>
-                  <div class="tes">
-                    <p>Jam Selesai</p>
-                    <h4 class="mt--4">{{ \Carbon\Carbon::parse($equipment->waktu_selesai)->format('H:i') }}</h4>
+                  <h3>Waktu Reschedule</h3>
+                  <hr>
+                  <div class="row">
+                    <div class="col-md-6">
+                      <h4><b>Tanggal</b></h4>
+                      <div class="tes">
+                        <p class="mt-3">Tanggal Mulai</p>
+                        <h4 class="mt--4">{{ Carbon::parse($equipment->waktu_mulai)->locale('id')->isoFormat('dddd, D MMMM YYYY') }}</h4>
+                      </div>
+                      <div class="tes">
+                        <p>Tanggal Selesai</p>
+                        <h4 class="mt--4">{{ Carbon::parse($equipment->waktu_selesai)->locale('id')->isoFormat('dddd, D MMMM YYYY') }}</h4>
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                      <h4><b>Jam</b></h4>
+                      <div class="tes">
+                        <p class="mt-3">Jam Mulai</p>
+                        <h4 class="mt--4">{{ \Carbon\Carbon::parse($equipment->waktu_mulai)->format('H:i') }}                    </h4>
+                      </div>
+                      <div class="tes">
+                        <p>Jam Selesai</p>
+                        <h4 class="mt--4">{{ \Carbon\Carbon::parse($equipment->waktu_selesai)->format('H:i') }}</h4>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>

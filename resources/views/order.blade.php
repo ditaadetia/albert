@@ -49,10 +49,10 @@
               <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
                   <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Rentang Waktu Penyewaan</h5>
+                    <h5 class="modal-title" id="exampleModalLabel">Rentang Waktu Rekapitulasi Penyewaan</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                   </div>
-                    <form action="{{ route('ordersExcel', ['category' => $category]) }}" method="POST" class="well" id="block-validate">
+                    <form action="{{ route('ordersExcel') }}" method="POST" class="well" id="block-validate">
                       @csrf
                       @method('PUT')
                       <div class="modal-body">

@@ -17,12 +17,12 @@ class CreatePaymentsTable extends Migration
             $table->id();
             $table->foreignId('order_id');
             $table->foreignId('tenant_id');
-            $table->string('metode_pembayaran')->nullable;
-            $table->string('kode_pembayaran');
-            $table->string('bukti_pembayaran');
-            $table->integer('total')->nullable;
-            $table->boolean('konfirmasi_pembayaran');
-            $table->string('ket_konfirmasi');
+            $table->string('metode_pembayaran')->default('');
+            $table->string('kode_pembayaran')->default('');
+            $table->string('bukti_pembayaran')->default('');
+            $table->integer('total')->default();
+            $table->boolean('konfirmasi_pembayaran')->default(0);
+            $table->string('ket_konfirmasi')->default('');
             $table->timestamps();
         });
     }

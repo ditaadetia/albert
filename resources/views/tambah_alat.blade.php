@@ -73,8 +73,8 @@
                         </div>
                         <div class="col-lg-12">
                             <div class="form-group">
-                                <label class="form-control-label" for="input-keterangan">Keterangan</label>
-                                <input type="text" id="keterangan" name="keterangan" class="form-control" placeholder="Keterangan" value="{{ old('keterangan') }}" required>
+                                <label class="form-control-label" for="input-keterangan">Spesifikasi</label>
+                                <input type="text" id="keterangan" name="keterangan" class="form-control" placeholder="Spesifikasi" value="{{ old('keterangan') }}" required>
                             </div>
                         </div>
                         <div class="col-lg-12">

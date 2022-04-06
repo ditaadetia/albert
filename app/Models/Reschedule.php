@@ -33,4 +33,15 @@ class Reschedule extends Model
             return $this->hasMany(DetailReschedule::class)->where(['ket_persetujuan_kepala_uptd' => 'setuju', 'ket_persetujuan_kepala_dinas' => 'belum']);
         }
     }
+
+    public function reschedule()
+    {
+        if(!auth()->check() || auth()->user()->jabatan === 'admin'){
+            return $this->hasMany(detailReschedule::class)->where(['ket_verif_admin' => 'belum']);
+        }elseif(!auth()->check() || auth()->user()->jabatan === 'kepala uptd'){
+            return $this->hasMany(detailReschedule::class)->where(['ket_verif_admin' => 'verif']);
+        }elseif(!auth()->check() || auth()->user()->jabatan === 'kepala dinas'){
+            return $this->hasMany(detailReschedule::class)->where(['ket_persetujuan_kepala_uptd' => 'setuju']);
+        }
+    }
 }

@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use PDF;
 use App\Models\Order;
+use App\Models\Schedule;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\PDFController;
 
@@ -28,13 +29,19 @@ class DokumenSewaController extends Controller
         ->where('order_id', $request->id)
         ->select('orders.tanggal_mulai', 'orders.tanggal_selesai', 'equipments.harga_sewa_perhari', 'equipments.harga_sewa_perjam', 'equipments.nama', 'equipments.jenis', 'equipments.id')->get();
 
+        $detail_order_id = DB::table('orders')
+        ->join('detail_orders', 'detail_orders.order_id', '=', 'orders.id')
+        ->join('equipments', 'detail_orders.equipment_id', '=', 'equipments.id')
+        ->where('order_id', $request->id)
+        ->select('detail_orders.id', 'equipments.nama')->get();
+
         $kepala_uptd = DB::table('users')->where('jabatan', 'kepala uptd')->select('name', 'pangkat', 'nip')->first();
         $kepala_dinas = DB::table('users')->where('jabatan', 'kepala dinas')->first();
 
         $order1 = DB::table('orders')
         ->join('tenants', 'orders.tenant_id', '=', 'tenants.id')
         ->where('orders.id', $request->id)
-        ->select('orders.id', 'orders.nama_instansi', 'tenants.nama', 'orders.nama_kegiatan', 'ket_persetujuan_kepala_dinas', 'ttd_kepala_dinas')
+        ->select('orders.id', 'orders.nama_instansi', 'tenants.nama', 'orders.nama_kegiatan', 'ket_persetujuan_kepala_dinas', 'ttd_kepala_dinas', 'ket_persetujuan_kepala_uptd', 'orders.ttd_kepala_uptd')
         ->first();
 
         $detail1 = DB::table('orders')
@@ -63,6 +70,18 @@ class DokumenSewaController extends Controller
         ->update([
             'dokumen_sewa' => 'dokumen_sewa_' . $request->id . '.pdf'
         ]);
+
+        if(!auth()->check() || auth()->user()->jabatan === 'kepala dinas'){
+            foreach($detail_order_id as $detail_order_id){
+                DB::table('schedules')->insert([
+                    'order_id' => $request->id,
+                    'tanggal_mulai' => $order->tanggal_mulai,
+                    'tanggal_selesai' => $order->tanggal_selesai,
+                    'nama_order' => $detail_order_id->nama,
+                    'detail_order_id' => $detail_order_id->id,
+                ]);
+            }
+        }
         return redirect()->route('index', ['category' => '1'])->with('success', 'Verifikasi pengajuan penyewaan berhasil!');
     }
 

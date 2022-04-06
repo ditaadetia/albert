@@ -16,7 +16,7 @@ class TenantResource extends JsonResource
     {
         return [
             'nama' => $this->nama,
-            'foto' => $this->foto,
+            'foto' => asset('storage/' . $this->foto),
             'email' => $this->email,
             'username' => $this->username,
             'password' => $this->password,

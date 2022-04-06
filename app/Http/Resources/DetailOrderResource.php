@@ -20,8 +20,10 @@ class DetailOrderResource extends JsonResource
     public function toArray($request)
     {
         return [
+            'id' => $this->id,
             'order_id' => $this->order_id,
             'equipment_id' => $this->equipment_id,
+            'nama' => $this->nama,
             // 'tanggal_ambil' => $this->tanggal_ambil,
             // 'tanggal_kembali' => $this->tanggal_kembali,
             // 'status' => $this->status,

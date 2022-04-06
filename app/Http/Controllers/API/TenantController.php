@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Models\Tenant;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Storage;
 
 class TenantController extends Controller
@@ -82,4 +83,79 @@ class TenantController extends Controller
          ]);
         return response(['program' => $program], 200);
     }
+
+    public function editProfil(Request $request, Tenant $tenant)
+    {
+        $validator = Validator::make($request->all(),[
+            'nama' => 'required|string',
+            // 'foto' => 'required|string',
+            // 'foto' => 'required|file|max:1024|mimes:png,jpg,jpeg',
+            'email' => 'required|string',
+            // 'username' => 'required|string',
+            'password' => 'required|string',
+            'no_hp' => 'required|string',
+            'kontak_darurat' => 'required|string',
+            'alamat' => 'required|string',
+        ]);
+
+        DB::transaction(function () use ($validator, $request, $tenant) {
+            $tenant->update([
+                'nama' => $validator['nama'],
+                // 'foto' => $validator['foto'],
+                'email' => $validator['email'],
+                'password' => $validator['password'],
+                'no_hp' => $validator['no_hp'],
+                'kontak_darurat' => $validator['kontak_darurat'],
+                'alamat' => $validator['alamat'],
+            ]);
+            return $tenant->save();
+        });
+
+        if($validator->fails()){
+            return response()->json($validator->errors());
+        }
+        return response()->json(['Edit Profil Berhasil!', new TenantResource($tenant)]);
+    }
+
+    // public function update(Request $request, Tenant $tenant)
+    // {
+    //     $validated = $request->validate([
+    //         'nama' => 'required|string',
+    //         'foto' => 'required|string',
+    //         // 'foto' => 'required|file|max:1024|mimes:png,jpg,jpeg',
+    //         'email' => 'required|string',
+    //         // 'username' => 'required|string',
+    //         'password' => 'required|string',
+    //         'no_hp' => 'required|integer',
+    //         'kontak_darurat' => 'required|integer',
+    //         'alamat' => 'required|string',
+    //     ]);
+
+    //     $result = DB::transaction(function () use ($validated, $request, $tenant) {
+    //         $tenant->update([
+    //             'nama' => $validated['nama'],
+    //             'foto' => $validated['foto'],
+    //             'email' => $validated['email'],
+    //             'password' => $validated['password'],
+    //             'no_hp' => $validated['no_hp'],
+    //             'kontak_darurat' => $validated['kontak_darurat'],
+    //             'alamat' => $validated['alamat'],
+    //         ]);
+
+    //         if ($request->hasFile('foto')) {
+
+    //             // delete old image from 'public' disk
+    //             Storage::disk('public')->delete($tenant->foto);
+
+    //             // store the 'foto' into the 'public' disk
+    //             $tenant->foto = $request->file('foto')->store('tenants', 'public');
+    //         }
+
+    //         return $tenant->save();
+    //     });
+
+    //     if ($result) {
+    //         return response()->json($tenant);
+    //     }
+    // }
 }

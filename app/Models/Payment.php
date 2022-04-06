@@ -12,6 +12,14 @@ class Payment extends Model
     protected $table = 'payments';
     protected $guarded = ['id'];
 
+    protected $fillable = [
+        'order_id',
+        'tenant_id',
+        'bukti_pembayaran',
+        'konfirmasi_pembayaran',
+        'ket_konfirmasi'
+    ];
+
     public function order()
     {
         return $this->belongsTo(Order::class);

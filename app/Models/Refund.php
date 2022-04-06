@@ -34,6 +34,17 @@ class Refund extends Model
         }
     }
 
+    public function refund()
+    {
+        if(!auth()->check() || auth()->user()->jabatan === 'admin'){
+            return $this->hasMany(detailRefund::class)->where(['ket_verif_admin' => 'belum']);
+        }elseif(!auth()->check() || auth()->user()->jabatan === 'kepala uptd'){
+            return $this->hasMany(detailRefund::class)->where(['ket_verif_admin' => 'verif']);
+        }elseif(!auth()->check() || auth()->user()->jabatan === 'kepala dinas'){
+            return $this->hasMany(detailRefund::class)->where(['ket_persetujuan_kepala_uptd' => 'setuju']);
+        }
+    }
+
     // public function tenant()
     // {
     //     return $this->hasOneThrough(Refund::class, Order::class, 'tenant_id', 'order_id', 'id', 'id');

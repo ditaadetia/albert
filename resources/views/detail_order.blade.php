@@ -140,7 +140,7 @@
                             });
                         });
                       </script>
-                      <div class="col mt-3">
+                      {{-- <div class="col mt-3">
                         <h6 class="text-sm-start">KTP:</h6>
                         <?php $ktp = trim($order->ktp, "ktp/"); ?>
                         <a href="#" class="pop" style="position: relative;">
@@ -162,29 +162,55 @@
                            </div>
                           </div>
                         </div>
+                      </div> --}}
+                      <div class="col mt-3">
+                        <h6 class="text-sm-start">KTP:</h6>
+                        <a href="{{ route('downloadKtp', ['id' => $order->id]) }}">
+                          <div class="contohgambar" style="position: relative;">
+                            <img class="gambar1 mt--2" src="{{ asset('img/folder.png') }}" onmouseover="this.src='{{ asset('img/folder-hover.png') }}';" onmouseout="this.src='{{ asset('img/folder.png') }}';" style="width:300px; height:60px; position: relative; z-index: 1;" alt="">
+                            <h5 style="position: absolute; z-index: 2; top: 0px; margin-left:10px;">Download file</h5>
+                            <?php $ktp = trim($order->ktp, 'ktp/'); ?>
+                            <h6 style="position: absolute; z-index: 2; top: 25px; color: #9B9B9B; margin-left:10px;">{{ $ktp }}</h6>
+                          </div>
+                        </a>
                       </div>
                       <div class="col mt-3">
                         <h6 class="text-sm-start">Surat Permohonan Penyewaan:</h6>
                         <a href="{{ route('downloadPermohonan', ['id' => $order->id]) }}">
                           <div class="contohgambar" style="position: relative;">
-                            <img class="gambar1 mt--2" src="{{ asset('img/folder.png') }}" onmouseover="this.src='{{ asset('img/folder-hover.png') }}';" onmouseout="this.src='{{ asset('img/folder.png') }}';" style="width:180px; height:60px; position: relative; z-index: 1;" alt="">
+                            <img class="gambar1 mt--2" src="{{ asset('img/folder.png') }}" onmouseover="this.src='{{ asset('img/folder-hover.png') }}';" onmouseout="this.src='{{ asset('img/folder.png') }}';" style="width:300px; height:60px; position: relative; z-index: 1;" alt="">
                             <h5 style="position: absolute; z-index: 2; top: 0px; margin-left:10px;">Download file</h5>
                             <?php $surat_permohonan = trim($order->surat_permohonan, 'surat_permohonan/'); ?>
                             <h6 style="position: absolute; z-index: 2; top: 25px; color: #9B9B9B; margin-left:10px;">{{ $surat_permohonan }}</h6>
                           </div>
                         </a>
                       </div>
-                      <div class="col mt-3">
-                        <h6 class="text-sm-start">Akta Notaris:</h6>
-                        <a href="{{ route('downloadAkta', ['id' => $order->id]) }}">
-                          <div class="contohgambar" style="position: relative;">
-                            <img class="gambar1 mt--2" src="{{ asset('img/folder.png') }}" onmouseover="this.src='{{ asset('img/folder-hover.png') }}';" onmouseout="this.src='{{ asset('img/folder.png') }}';" style="width:180px; height:60px; position: relative; z-index: 1;" alt="">
-                            <h5 style="position: absolute; z-index: 2; top: 0px; margin-left:10px;">Download file</h5>
-                            <?php $akta_notaris = trim($order->akta_notaris, 'akta_notaris/'); ?>
-                            <h6 style="position: absolute; z-index: 2; top: 25px; color: #9B9B9B; margin-left:10px;">{{ $akta_notaris }}</h6>
-                          </div>
-                        </a>
-                      </div>
+                      @if($order->category_order_id =='1')
+                        <div class="col mt-3">
+                          <h6 class="text-sm-start">Akta Notaris:</h6>
+                          <a href="{{ route('downloadAkta', ['id' => $order->id]) }}">
+                            <div class="contohgambar" style="position: relative;">
+                              <img class="gambar1 mt--2" src="{{ asset('img/folder.png') }}" onmouseover="this.src='{{ asset('img/folder-hover.png') }}';" onmouseout="this.src='{{ asset('img/folder.png') }}';" style="width:300px; height:60px; position: relative; z-index: 1;" alt="">
+                              <h5 style="position: absolute; z-index: 2; top: 0px; margin-left:10px;">Download file</h5>
+                              <?php $akta_notaris = trim($order->akta_notaris, 'akta_notaris/'); ?>
+                              <h6 style="position: absolute; z-index: 2; top: 25px; color: #9B9B9B; margin-left:10px;">{{ $akta_notaris }}</h6>
+                            </div>
+                          </a>
+                        </div>
+                      @endif
+                      @if($order->category_order_id =='4')
+                        <div class="col mt-3">
+                          <h6 class="text-sm-start">Surat Pengantar dari RT/RW/Lurah:</h6>
+                          <a href="{{ route('downloadSuratPengantar', ['id' => $order->id]) }}">
+                            <div class="contohgambar" style="position: relative;">
+                              <img class="gambar1 mt--2" src="{{ asset('img/folder.png') }}" onmouseover="this.src='{{ asset('img/folder-hover.png') }}';" onmouseout="this.src='{{ asset('img/folder.png') }}';" style="width:300px; height:60px; position: relative; z-index: 1;" alt="">
+                              <h5 style="position: absolute; z-index: 2; top: 0px; margin-left:10px;">Download file</h5>
+                              <?php $surat_ket = trim($order->surat_ket, 'surat_ket/'); ?>
+                              <h6 style="position: absolute; z-index: 2; top: 25px; color: #9B9B9B; margin-left:10px;">{{ $surat_ket }}</h6>
+                            </div>
+                          </a>
+                        </div>
+                      @endif
                     </div>
                   </div>
                 </div>

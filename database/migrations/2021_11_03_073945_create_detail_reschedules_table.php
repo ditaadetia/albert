@@ -15,13 +15,13 @@ class CreateDetailReschedulesTable extends Migration
     {
         Schema::create('detail_reschedules', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('reschedule_id');
-            $table->foreignId('equipment_id');
+            $table->foreignId('detail_order_id');
+            $table->foreignId('order_id');
             $table->dateTime('waktu_mulai')->nullable;
             $table->dateTime('waktu_selesai')->nullable;
-            $table->enum('ket_verif_admin', ['belum', 'verif', 'tolak'])->nullable;
-            $table->enum('ket_persetujuan_kepala_uptd', ['belum', 'setuju', 'tolak'])->nullable;
-            $table->string('ket_konfirmasi')->nullable;
+            $table->enum('ket_verif_admin', ['belum', 'verif', 'tolak'])->default('belum');
+            $table->enum('ket_persetujuan_kepala_uptd', ['belum', 'setuju', 'tolak'])->default('belum');
+            $table->string('keterangan')->nullable;
             $table->timestamps();
         });
     }

@@ -105,7 +105,7 @@
           </div>
           <div class="row">
             <div class="col-3">
-              <h4>Keterangan</h4>
+              <h4>Spesifikasi</h4>
             </div>
             <div class="col-1 text-right">
               :

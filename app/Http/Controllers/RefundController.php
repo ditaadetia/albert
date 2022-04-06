@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Refund;
+use App\Models\Schedule;
 use App\Models\detailRefund;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
@@ -12,34 +13,11 @@ class RefundController extends Controller
     public function index()
     {
         $refunds = Refund::paginate(5);
-        $tes = DB::table('refunds')
-            ->join('detail_refunds', 'detail_refunds.refund_id', '=', 'refunds.id')
-            ->where('detail_refunds.ket_verif_admin', '=', 'setuju')->paginate(5);
+
         return view('refund', [
             'refunds' => $refunds,
-            'tes' => $tes
         ]);
     }
-
-    //     $refunds = DB::table('refunds')
-    //     ->join('detail_refunds', 'detail_refunds.refund_id', '=', 'refunds.id')
-    //     ->join('orders', 'refunds.order_id', '=', 'orders.id')
-    //     ->join('tenants', 'orders.tenant_id', '=', 'tenants.id')
-    //     ->where('detail_refunds.ket_verif_admin', '=', 'verif')
-    //     ->select('detail_refunds.id', 'orders.nama_kegiatan', 'tenants.nama', 'orders.category_order_id')->paginate(5);
-    // return view('refund', [
-    //     'refunds' => $refunds,
-    // ]);
-
-    // public function index()
-    // {
-    //     $refunds = DB::table('refunds')
-    //     ->join('detail_refunds', 'detail_refunds.refund_id', '=', 'refunds.id')
-    //     ->where('detail_refunds.ket_verif_admin', '=', 1)->paginate(5);
-    //     return view('refund', [
-    //         'refunds' => $refunds
-    //     ]);
-    // }
 
     public function refundsExcel(Request $request)
     {
@@ -50,27 +28,27 @@ class RefundController extends Controller
         $tanggal_awal=$validated['tanggal_awal'];
         $tanggal_akhir=$validated['tanggal_akhir'];
 
+        $refund = DB::table('refunds')
+        ->join('orders', 'orders.id', '=', 'refunds.order_id')
+        ->join('tenants', 'tenants.id', '=', 'orders.tenant_id')
+        ->whereBetween('refunds.created_at', [$tanggal_awal, $tanggal_akhir])
+           ->whereExists(function ($query) {
+               $query->select(DB::raw(1))
+                     ->from('detail_refunds')
+                     ->where('detail_refunds.ket_persetujuan_kepala_dinas', 'setuju')
+                     ->whereColumn('detail_refunds.refund_id', 'refunds.id');
+           })
+           ->get();
+
         $detail_refunds = DB::table('detail_refunds')
         ->join('refunds', 'refunds.id', '=', 'detail_refunds.refund_id')
-        ->where('ket_persetujuan_kepala_dinas', 'setuju')
+        ->join('orders', 'orders.id', '=', 'refunds.order_id')
+        ->join('equipments', 'equipments.id', '=', 'orders.tenant_id')
         ->get();
 
-        $refunds1 = DB::table('refunds')
-        ->join('orders', 'orders.id', '=', 'refunds.order_id')
-        ->join('tenants', 'tenants.id', '=', 'orders.tenant_id')
-        ->join('detail_refunds', 'detail_refunds.refund_id', '=', 'refunds.id')
-        ->where('detail_refunds.ket_persetujuan_kepala_dinas', 'setuju')
-        ->get();
-
-        $refunds = DB::table('detail_refunds')
-        ->join('refunds', 'refunds.id', '=', 'detail_refunds.refund_id')
-        ->join('orders', 'orders.id', '=', 'refunds.order_id')
-        ->join('tenants', 'tenants.id', '=', 'orders.tenant_id')
-        ->where('detail_refunds.ket_persetujuan_kepala_dinas', 'setuju')
-        ->whereBetween('refunds.created_at', [$tanggal_awal, $tanggal_akhir])->get();
         return view('refund-excel', [
-            'refunds' => $refunds,
-            'refunds1' => $refunds1,
+            'refund' => $refund,
+            'detail_refunds' => $detail_refunds
         ]);
     }
 
@@ -209,7 +187,7 @@ class RefundController extends Controller
         }
     }
 
-    public function setujuRefundKepalaUPTD(detailRefund $id){
+    public function setujuRefundKepalaUPTD(detailRefund $id, Request $request){
         $result = DB::transaction(function () use ($id) {
             $id->update([
                 'ket_persetujuan_kepala_uptd' => 'setuju'
@@ -249,6 +227,8 @@ class RefundController extends Controller
     }
 
     public function setujuRefundKepalaDinas(detailRefund $id){
+        $tes =DB::table('schedules')->where('detail_order_id', $id)->delete();
+
         $result = DB::transaction(function () use ($id) {
             $id->update([
                 'ket_persetujuan_kepala_dinas' => 'setuju'
@@ -257,6 +237,18 @@ class RefundController extends Controller
         });
 
         if ($result) {
+            //redirect dengan pesan sukses
+            return redirect()->route('hapusSchedule', ['id' => $id])->with('success', 'Persetujuan pengajuan refund berhasil!');
+        } else {
+            //redirect dengan pesan error
+            return redirect()->route('refunds.index')->with('error', 'Persetujuan pengajuan refund gagal!');
+        }
+    }
+
+    public function hapusSchedule($id){
+        $tes =DB::table('schedules')->where('detail_order_id', $id)->delete();
+
+        if ($tes) {
             //redirect dengan pesan sukses
             return redirect()->route('refunds.index')->with('success', 'Persetujuan pengajuan refund berhasil!');
         } else {

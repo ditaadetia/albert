@@ -8,8 +8,10 @@ use App\Http\Controllers\TenantController;
 use App\Http\Controllers\RescheduleController;
 use App\Http\Controllers\PasswordController;
 use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\SkrController;
 use App\Http\Controllers\KeluarMasukAlatController;
 use App\Http\Controllers\DokumenSewaController;
+use App\Http\Controllers\generateSkrController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -65,10 +67,13 @@ Route::get('/header', function () {
 // });
 
 Route::resource('equipments', EquipmentController::class)->middleware('admin');
+Route::get('event', [EquipmentController::class, 'event'])->name('event')->middleware('admin_kepalauptd_kepaladinas');
 Route::resource('refunds', RefundController::class)->middleware('admin_kepalauptd_kepaladinas');
 Route::resource('users', LoginController::class)->middleware('auth');
 Route::resource('reschedules', RescheduleController::class)->middleware('admin_kepalauptd');
+Route::get('detail_reschedules/{id}', [RescheduleController::class, 'rescheduleShow'])->name('rescheduleShow')->middleware('admin_kepalauptd');
 Route::resource('payments', PaymentController::class)->middleware('auth')->middleware('bendahara');
+Route::resource('skrs', SkrController::class)->middleware('auth')->middleware('bendahara');
 // Route::resource('fines', FineController::class)->middleware('auth')->middleware('bendahara');
 Route::resource('keluar-masuk-alat', KeluarMasukAlatController::class)->middleware('auth')->middleware('admin');
 // Route::resource('category', 'App\Http\Controllers\CategoryController'::class);
@@ -78,7 +83,9 @@ Route::get('orders/{category}', [OrderController::class, 'index'])->name('index'
 Route::get('detail_orders/{id}', [OrderController::class, 'show'])->name('show')->middleware('admin_kepalauptd_kepaladinas');
 Route::get('download-permohonan/{id}', [OrderController::class, 'downloadPermohonan'])->name('downloadPermohonan')->middleware('admin_kepalauptd_kepaladinas');
 Route::get('download-akta/{id}', [OrderController::class, 'downloadAkta'])->name('downloadAkta')->middleware('admin_kepalauptd_kepaladinas');
-Route::get('download-permohonan-refund/{id}', [RefundController::class, 'downloadPermohonanRefund'])->name('downloadPermohonanRefund')->middleware('admin_kepalauptd_kepaladinas');
+Route::get('download-ktp/{id}', [OrderController::class, 'downloadKtp'])->name('downloadAkta')->middleware('admin_kepalauptd_kepaladinas');
+Route::get('download-pengantar/{id}', [OrderController::class, 'downloadSuratPengantar'])->name('downloadSuratPengantar')->middleware('admin_kepalauptd_kepaladinas');
+Route::get('download-permohonan-refund/{id}', [OrderController::class, 'downloadKtp'])->name('downloadKtp')->middleware('admin_kepalauptd_kepaladinas');
 Route::get('download-bukti-pembayaran/{id}', [PaymentController::class, 'downloadBuktiPembayaran'])->name('downloadBuktiPembayaran')->middleware('bendahara');
 
 Route::get('verifikasi-admin/{id}', [OrderController::class, 'verifAdmin'])->name('verifAdmin')->middleware('admin');
@@ -89,27 +96,36 @@ Route::put('tolak-refund-admin/{id}', [RefundController::class, 'tolakRefundAdmi
 Route::put('tolak-reschedule-admin/{id}', [RescheduleController::class, 'tolakRescheduleAdmin'])->name('tolakRescheduleAdmin')->middleware('admin');
 
 Route::get('verifikasi-kepala-uptd/{id}', [OrderController::class, 'setujuKepalaUPTD'])->name('setujuKepalaUPTD')->middleware('kepala_uptd');
+Route::get('terbit-skr/{id}', [SkrController::class, 'setujuBendahara'])->name('setujuBendahara')->middleware('bendahara');
 Route::get('verifikasi-refund-kepala-uptd/{id}', [RefundController::class, 'setujuRefundKepalaUPTD'])->name('setujuRefundKepalaUPTD')->middleware('kepala_uptd');
 Route::get('verifikasi-reschedule-kepala-uptd/{id}', [RescheduleController::class, 'setujuRescheduleKepalaUPTD'])->name('setujuRescheduleKepalaUPTD')->middleware('kepala_uptd');
+Route::get('editSchedule/{id}', [RescheduleController::class, 'editSchedule'])->name('editSchedule')->middleware('kepala_uptd');
 Route::put('tolak-kepala-uptd/{id}', [OrderController::class, 'tolakKepalaUPTD'])->name('tolakKepalaUPTD')->middleware('kepala_uptd');
 Route::put('tolak-refund-kepala-uptd/{id}', [RefundController::class, 'tolakRefundKepalaUPTD'])->name('tolakRefundKepalaUPTD')->middleware('kepala_uptd');
 Route::put('tolak-reschedule-kepala-uptd/{id}', [RescheduleController::class, 'tolakRescheduleKepalaUPTD'])->name('tolakRescheduleKepalaUPTD')->middleware('kepala_uptd');
 
 Route::get('verifikasi-kepala-dinas/{id}', [OrderController::class, 'setujuKepalaDinas'])->name('setujuKepalaDinas')->middleware('kepala_dinas');
 Route::get('verifikasi-refund-kepala-dinas/{id}', [RefundController::class, 'setujuRefundKepalaDinas'])->name('setujuRefundKepalaDinas')->middleware('kepala_dinas');
+Route::get('hapusSchedule/{id}', [RefundController::class, 'hapusSchedule'])->name('hapusSchedule')->middleware('kepala_dinas');
 Route::put('tolak-kepala-dinas/{id}', [OrderController::class, 'tolakKepalaDinas'])->name('tolakKepalaDinas')->middleware('kepala_dinas');
 Route::put('tolak-refund-kepala-dinas/{id}', [RefundController::class, 'tolakRefundKepalaDinas'])->name('tolakRefundKepalaDinas')->middleware('kepala_dinas');
 
 Route::get('verifikasi-pembayaran/{id}', [PaymentController::class, 'verifPembayaran'])->name('verifPembayaran')->middleware('bendahara');
 Route::put('tolak-pembayaran/{id}', [PaymentController::class, 'tolakPembayaran'])->name('tolakPembayaran')->middleware('auth');
 
+// Route::get('terbit-skr/{id}', [SkrController::class, 'terbitSkr'])->name('terbitSkr')->middleware('bendahara');
+
 Route::post('ttd-kepala-uptd/{id}', [OrderController::class, 'ttdKepalaUPTD'])->name('ttdKepalaUPTD')->middleware('kepala_uptd');
 Route::post('ttd-kepala-dinas/{id}', [OrderController::class, 'ttdKepalaDinas'])->name('ttdKepalaDinas')->middleware('kepala_dinas');
+Route::post('ttd-bendahara/{id}', [SkrController::class, 'ttdBendahara'])->name('ttdBendahara')->middleware('bendahara');
+Route::get('generateSkr/{id}', [generateSkrController::class, 'generateSkr'])->name('generateSkr')->middleware('bendahara');
+
 
 Route::get('/cari-order', [OrderController::class, 'search'])->name('search')->middleware('admin_kepalauptd_kepaladinas');
 Route::get('/cari-refund', [RefundController::class, 'search'])->name('search')->middleware('admin_kepalauptd_kepaladinas');
 Route::get('/cari-reschedule', [RescheduleController::class, 'search'])->name('search')->middleware('admin_kepalauptd_kepaladinas');
 Route::get('/cari-payment', [PaymentController::class, 'search'])->name('search')->middleware('bendahara');
+Route::get('/cari-skr', [SkrController::class, 'search'])->name('search')->middleware('bendahara');
 // Route::get('/cari-fine', [FineController::class, 'search'])->name('search')->middleware('bendahara');
 Route::get('/cari-penyewa', [TenantController::class, 'search'])->name('search')->middleware('admin');
 Route::get('/cari-keluar-masuk', [KeluarMasukAlatController::class, 'search'])->name('search')->middleware('admin');
@@ -123,5 +139,6 @@ Route::get('/lihatDokumenSewa/{id}', [DokumenSewaController::class, 'lihatDokume
 Route::get('alat-keluar/{id}', [KeluarMasukAlatController::class, 'alatKeluar'])->name('alatKeluar')->middleware('admin');
 Route::get('alat-masuk/{id}', [KeluarMasukAlatController::class, 'alatMasuk'])->name('alatMasuk')->middleware('admin');
 
-Route::put('orders-excel/{category}', [OrderController::class, 'ordersExcel'])->name('ordersExcel')->middleware('kepalauptd_kepaladinas');
+Route::put('orders-excel', [OrderController::class, 'ordersExcel'])->name('ordersExcel')->middleware('kepalauptd_kepaladinas');
 Route::put('refunds-excel', [RefundController::class, 'refundsExcel'])->name('refundsExcel')->middleware('kepalauptd_kepaladinas');
+Route::put('reschedules-excel', [RescheduleController::class, 'reschedulesExcel'])->name('reschedulesExcel')->middleware('kepalauptd_kepaladinas');

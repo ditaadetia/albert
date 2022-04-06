@@ -12,12 +12,23 @@ use Symfony\Component\HttpFoundation\Response as HttpFoundationResponse;
 
 class DetailOrderController extends Controller
 {
+    public function index()
+    {
+        $tenants = DB::table('detail_orders')
+        ->join('equipments', 'detail_orders.equipment_id', '=', 'equipments.id')
+        ->select('detail_orders.id', 'detail_orders.order_id', 'detail_orders.equipment_id', 'equipments.nama')
+        // ->where('orders.id', 'detail_orders.order_id')
+        ->get();
+        return response()->json($tenants);
+    }
+
     public function store(Request $request)
     {
         $validator = $request->validate([
             'order_id' => 'required|integer',
             'equipment_id' => 'required|integer',
         ]);
+
 
         $result = DB::transaction(function () use ($validator, $request) {
             return DetailOrder::create($validator);

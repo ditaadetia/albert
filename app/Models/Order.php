@@ -65,14 +65,14 @@ class Order extends Model
         return $this->hasMany(Reschedule::class);
     }
 
-    public function equipment()
-    {
-        return $this->hasMany(Equipment::class);
-    }
+    // public function equipment()
+    // {
+    //     return $this->hasMany(Equipment::class);
+    // }
 
     public function detailorder()
     {
-        return $this->hasManyThrough(DetailOrder::class,Equipment::class);
+        return $this->hasManyThrough(DetailOrder::class, Equipment::class);
     }
 
     public function belum_diambil()

@@ -20,6 +20,7 @@ class OrderResource extends JsonResource
     public function toArray($request)
     {
         return [
+            'id' => $this->id,
             'tenant_id' => $this->tenant_id,
             'category_order_id' => $this->category_order_id,
             'nama_instansi' => $this->nama_instansi,
@@ -30,6 +31,7 @@ class OrderResource extends JsonResource
             'surat_permohonan' => asset('storage/' . $this->surat_permohonan),
             'akta_notaris' => asset('storage/' . $this->akta_notaris),
             'surat_ket' => asset('storage/' . $this->surat_ket),
+            // 'order_id' => $this->order_id,
             // 'ket_verif_admin' => $this->ket_verif_admin,
             // 'ket_persetujuan_kepala_uptd' => $this->ket_persetujuan_kepala_uptd,
             // 'ket_persetujuan_kepala_dinas' => $this->ket_persetujuan_kepala_dinas,

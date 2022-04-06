@@ -15,6 +15,11 @@ class LoginController extends Controller
         return view('index');
     }
 
+    public function __construct()
+    {
+        return view('index');
+    }
+
     public function __invoke(Request $request)
     {
         $credentials = $request->validate([
@@ -28,10 +33,11 @@ class LoginController extends Controller
                 $chartsewa     = collect(DB::SELECT("SELECT count(id) AS jumlah from orders where month(created_at)='$bulan'"))->first();
                 $jumlah_sewa[] = $chartsewa->jumlah;
             }
-            return redirect()->intended('/dashboard', compact('jumlah_sewa'));
+            return redirect()->route('dashboard');
         }
         return redirect()->intended('salah_password');
     }
+
 
     public function logout(Request $request)
     {

@@ -133,11 +133,11 @@
                 <div class="col-md-4">
                   <h4><b>Jumlah</b></h4>
                   <div class="tes">
-                    <p class="mt-3">Jumlah hari sewa</p>
+                    <p class="mt-3">Jumlah hari refund</p>
                     <h4 class="mt--4">{{ $equipment->jumlah_hari_refund }} X {{ 'Rp. ' . number_format($equipment->harga_sewa_perhari, 2, ",", ".") }}</h4>
                   </div>
                   <div class="tes">
-                    <p>Jumlah jam sewa</p>
+                    <p>Jumlah jam refund</p>
                     <h4 class="mt--4">{{ $equipment->jumlah_jam_refund }} X {{ 'Rp. ' . number_format($equipment->harga_sewa_perjam, 2, ",", ".") }}</h4>
                   </div>
                 </div>
@@ -154,13 +154,12 @@
               <hr>
               <div class="row">
                 <div class="col-6">
-                  <h4><b>Total</b></h4>
+                  <h4><b>Total Pengembalian Dana</b></h4>
                 </div>
                 <div class="col-6 text-right" style="padding-right:30px">
-                  <?php
-                    $jumlah = ($equipment->jumlah_hari_refund * $equipment->harga_sewa_perhari) + ($equipment->jumlah_jam_refund* $equipment->harga_sewa_perjam);
-                    $total = $jumlah + $total;
-                  ?>
+                    <?php
+                      $jumlah = ($equipment->jumlah_hari_refund * $equipment->harga_sewa_perhari) + ($equipment->jumlah_jam_refund* $equipment->harga_sewa_perjam);
+                    ?>
                   <h3><b>{{ 'Rp. ' . number_format($jumlah, 2, ",", ".") }}</b></h3>
                 </div>
                 <div class="col-12 text-right">

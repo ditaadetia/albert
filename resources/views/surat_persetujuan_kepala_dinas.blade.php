@@ -73,7 +73,7 @@
         <div class="card shadow">
             <div class="card-body" style="padding-left: 3cm; padding-right:2cm">
                 <div class="header">
-                    <img src="{{ asset('img/Logo-Kota-Pontianak.png') }}" alt="" style="width:100px; height:90px;">
+                    <img src="{{ asset('img/Logo-Kota-Pontianak.jpg') }}" alt="" style="width:100px; height:90px;">
                     <h5 class="judul text-center">PEMERINTAH KOTA PONTIANAK<br><b><span class="font24">DINAS PEKERJAAN UMUM DAN PENATAAN RUANG</span></b><br><small>Alamat Jalan A. Yani Telpon : +62561-732300 Fax : +62561-747329</small><br><span class="font12"><b>PONTIANAK - KALBAR</b><span></h5>
                 </div>
                 <p class="p" style="text-align: right">Pontianak, {{ Carbon::now()->isoFormat('d MMMM YYYY') }}</p>

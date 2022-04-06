@@ -17,6 +17,7 @@
     },
     "dependencies": {
         "chart.js": "^3.6.2",
+        "expo-font": "^10.0.4",
         "php": "^1.0.2",
         "terbilang-js": "^1.0.1"
     }

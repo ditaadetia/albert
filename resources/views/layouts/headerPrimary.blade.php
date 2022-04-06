@@ -90,25 +90,32 @@
                                 <span class="nav-link-text">Penyewaan</span>
                             </a>
                             <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                                <a class="dropdown-item" href="{{ route('index', ['category' => '1']) }}">Penyewa Umum</a>
-                                <a class="dropdown-item" href="{{ route('index', ['category' => '2']) }}">Penyewa PUPR</a>
-                                <a class="dropdown-item" href="{{ route('index', ['category' => '3']) }}">Kegiatan Masyarakat</a>
+                                <a class="dropdown-item" href="{{ route('index', ['category' => '1']) }}">Umum</a>
+                                <a class="dropdown-item" href="{{ route('index', ['category' => '2']) }}">Kegiatan Rutin</a>
+                                <a class="dropdown-item" href="{{ route('index', ['category' => '3']) }}">Dinas Lain</a>
+                                <a class="dropdown-item" href="{{ route('index', ['category' => '4']) }}">Sosial Masyarakat</a>
                             </div>
                         </li>
                     @endcan
                     @can('bendahara')
+                        <li class="nav-item">
+                            <a class="nav-link {{ (Request::path() === 'skrs' || Request::path() === 'cari-skr') ? 'active' : '' }}" href="{{ route('skrs.index') }}">
+                                <i class="ni ni-money-coins text-green" aria-hidden="true"></i>
+                                <span class="nav-link-text" style="white-space:pre">SKR</span>
+                            </a>
+                        </li>
                         <li class="nav-item">
                             <a class="nav-link {{ (Request::path() === 'payments' || Request::path() === 'cari-payment') ? 'active' : '' }}" href="{{ route('payments.index') }}">
                                 <i class="ni ni-money-coins text-green" aria-hidden="true"></i>
                                 <span class="nav-link-text" style="white-space:pre">Pembayaran</span>
                             </a>
                         </li>
-                        <li class="nav-item">
+                        {{-- <li class="nav-item">
                             <a class="nav-link {{ (Request::path() === 'fines' || Request::path() === 'cari-fine') ? 'active' : '' }}" href="{{ route('fines.index') }}">
                                 <i class="ni ni-money-coins text-yellow" aria-hidden="true"></i>
                                 <span class="nav-link-text" style="white-space:pre">Denda</span>
                             </a>
-                        </li>
+                        </li> --}}
                     @endcan
                     @can('admin_kepalauptd_kepaladinas')
                         <li class="nav-item">
@@ -457,10 +464,10 @@
                             <?php $orders = DB::table('detail_reschedules')->where('ket_persetujuan_kepala_uptd', '=', 'belum')->count(); ?>
                             <span class="text-success mr-2">{{ $orders }}</span>
                         @endcan
-                        @can('kepala_dinas')
+                        {{-- @can('kepala_dinas')
                             <?php $orders = DB::table('detail_reschedules')->where('ket_persetujuan_kepala_dinas', '=', 'belum')->count(); ?>
                             <span class="text-success mr-2">{{ $orders }}</span>
-                        @endcan
+                        @endcan --}}
                         <span class="text-nowrap" style="font-size: 12px">Reschedule Perlu Disetujui</span>
                     </p>
                     </div>

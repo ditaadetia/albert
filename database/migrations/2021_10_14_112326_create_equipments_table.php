@@ -23,7 +23,7 @@ class CreateEquipmentsTable extends Migration
             $table->integer('jumlah_tersedia')->default();
             $table->integer('harga_sewa_perjam')->default();
             $table->integer('harga_sewa_perhari')->default();
-            $table->string('keterangan')->default('');
+            $table->text('keterangan')->default('');
             $table->string('kondisi')->default('');
             $table->timestamps();
         });

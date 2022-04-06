@@ -424,15 +424,15 @@
                 </div>
                 <div class="kepala-uptd" style="float: right">
                     <p style="text-decoration: underline" align="center"><b>PIHAK PERTAMA</b><br><p align="center" style="margin-top: -12px">KEPALA UPT ALAT BERAT <br> DINAS PEKERJAAN UMUM DAN PENATAAN <br> RUANG KOTA PONTIANAK</p></p>
-                    {{-- @if($order1->ket_persetujuan_kepala_uptd == 'belum' OR $order1->ket_persetujuan_kepala_uptd == 'tolak' OR $order1->ttd_kepala_uptd =='')
+                    @if($order1->ket_persetujuan_kepala_uptd == 'belum' OR $order1->ket_persetujuan_kepala_uptd == 'tolak' OR $order1->ttd_kepala_uptd =='')
                         <br><br><br>
                     @else
                         <center>
                             <?php $path = public_path('storage');
-                            $pdf=$path . '/' . $detail->ttd_kepala_uptd;?>
+                            $pdf=$path . '/' . $order1->ttd_kepala_uptd;?>
                             <img src="{{ $pdf }}" alt="" style="width:60px; height:60px;">
                         </center>
-                    @endif --}}
+                    @endif
                     <p style="text-decoration: underline" align="center"><b>{{ $kepala_uptd->name }}</b><br><p align="center" style="margin-top: -12px">{{ $kepala_uptd->pangkat }}</p><p style="margin-top: -12px" align="center">NIP. {{ $kepala_uptd->nip }}</p></p>
                 </div>
             </div>
@@ -441,15 +441,15 @@
                 <center>
                     <div class="kepala-dinas">
                         <p>Mengetahui : </p><p style="text-decoration: underline; margin-top:-12px"><b>KEPALA DINAS PEKERJAAN UMUM DAN PENATAAN RUANG KOTA PONTIANAK</b></p>
-                        {{-- @if($detail->ket_persetujuan_kepala_dinas == 'belum' OR $detail->ket_persetujuan_kepala_dinas == 'tolak' OR $detail->ttd_kepala_dinas =='')
+                        @if($order1->ket_persetujuan_kepala_dinas == 'belum' OR $order1->ket_persetujuan_kepala_dinas == 'tolak' OR $order1->ttd_kepala_dinas =='')
                             <br><br><br>
                         @else
                             <center>
                                 <?php $path = public_path('storage');
-                                $pdf=$path . '/' . $detail->ttd_kepala_dinas;?>
+                                $pdf=$path . '/' . $order1->ttd_kepala_dinas;?>
                                 <img src="{{ $pdf }}" alt="" style="width:60px; height:60px;">
                             </center>
-                        @endif --}}
+                        @endif
                         <p style="text-decoration: underline"><b style="margin-top: -12px">{{ $kepala_dinas->name }}</b><br><p style="margin-top: -12px">{{ $kepala_dinas->pangkat }}</p><p style="margin-top: -12px">{{ $kepala_dinas->nip }}</p></p>
                     </div>
                 </center>
@@ -490,7 +490,7 @@
         @else
             <center>
                 <?php $path = public_path('storage');
-                $pdf=$path . '/' . $detail->ttd_kepala_dinas;?>
+                $pdf=$path . '/' . $order1->ttd_kepala_dinas;?>
                 <img src="{{ $pdf }}" alt="" style="width:60px; height:60px;">
                 {{-- <?php dd($pdf) ?> --}}
             </center>

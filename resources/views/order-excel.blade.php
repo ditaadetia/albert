@@ -7,7 +7,13 @@
 <?php
 // Skrip berikut ini adalah skrip yang bertugas untuk meng-export data tadi ke excell
 header("Content-type: application/vnd-ms-excel");
-header("Content-Disposition: attachment; filename=Daftar-Order-Umum.xls");
+if(Request::path() === 'orders-excel/1') {
+  header("Content-Disposition: attachment; filename=Daftar-Order-Umum.xls");
+} elseif(Request::path() === 'orders-excel/2') {
+  header("Content-Disposition: attachment; filename=Daftar-Order-PUPR.xls");
+} elseif(Request::path() === 'orders-excel/3') {
+  header("Content-Disposition: attachment; filename=Daftar-Order-Kegiatan-Masyarakat.xls");
+}
 
 ?>
 <!DOCTYPE html>
@@ -60,8 +66,8 @@ header("Content-Disposition: attachment; filename=Daftar-Order-Umum.xls");
     @endif
     <br>
     <table border="1">
-      <thead bgcolor="#F4F4F">
-        <tr align="center">
+      <thead>
+        <tr align="center" style="text-align:center !important; vertical-align: middle !important; background-color:#FAD603">
           <td rowspan="1"><h6><b>NO.</b></h6></td>
           <td rowspan="1"><h6><b>KODE PEMESANAN</b></h6></td>
           <td rowspan="1"><h6><b>NAMA KEGIATAN</b></h6></td>
@@ -89,7 +95,7 @@ header("Content-Disposition: attachment; filename=Daftar-Order-Umum.xls");
               $total_waktu = $tanggal_selesai->diff($tanggal_mulai);
             ?>
             <?php $no++ ?>
-            <tr style="text-align:center !important;">
+            <tr style="text-align:center !important; vertical-align: middle !important">
               <td class="no">
                 {{ $no }}
               </td>
@@ -106,7 +112,11 @@ header("Content-Disposition: attachment; filename=Daftar-Order-Umum.xls");
                 {{ $order->alamat_instansi }}
               </td>
               <td>
-                {{ $order->nama }}
+                <ul type="none">
+                  <li>
+                    {{ $order->nama }}
+                  </li>
+                </ul>
               </td>
               <td>
                 <b>ALB-{{ $order->id }}</b>

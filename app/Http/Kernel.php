@@ -71,6 +71,8 @@ class Kernel extends HttpKernel
         'bendahara' => \App\Http\Middleware\IsBendahara::class,
         'admin_kepalauptd' => \App\Http\Middleware\IsAdminKepalauptd::class,
         'admin_kepalauptd_kepaladinas' => \App\Http\Middleware\IsAdminKepalauptdKepaladinas::class,
-        'kepalauptd_kepaladinas' => \App\Http\Middleware\IsKepalauptdKepaladinas::class
+        'kepalauptd_kepaladinas' => \App\Http\Middleware\IsKepalauptdKepaladinas::class,
+        'scopes' => \Laravel\Passport\Http\Middleware\CheckScopes::class,
+        'scope' => \Laravel\Passport\Http\Middleware\CheckForAnyScope::class,
     ];
 }

@@ -10,10 +10,11 @@ use Laravel\Sanctum\HasApiTokens;
 
 class Tenant extends Authenticatable
 {
-    use HasApiTokens, HasFactory;
+    use HasApiTokens, HasFactory, Notifiable;
 
     protected $table = 'tenants';
-    protected $guarded = [];
+    // protected $guard = 'tenants';
+    // protected $guarded = [];
 
     // public function scopeFilter($query, array $filters)
     // {

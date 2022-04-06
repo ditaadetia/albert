@@ -3,10 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Models\Order;
+use App\Models\Schedule;
 use App\Models\Equipment;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use PDF;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\MailNotify;
 class OrderController extends Controller
 {
     public function index($category)
@@ -17,10 +20,10 @@ class OrderController extends Controller
             $orders = Order::where(['category_order_id' => $category])->paginate(5);
         }
         elseif(!auth()->check() || auth()->user()->jabatan === 'kepala uptd'){
-            $orders = Order::where(['category_order_id' => $category, 'ket_verif_admin' => 'verif'])->paginate(5);
+            $orders =  Order::where(['category_order_id' => $category, 'ket_verif_admin' => 'verif'])->paginate(5);
         }
         if(!auth()->check() || auth()->user()->jabatan === 'kepala dinas'){
-            $orders = Order::where(['category_order_id' => $category, 'ket_verif_admin' => 'verif', 'ket_persetujuan_kepala_uptd' => 'setuju'])->paginate(5);
+            $orders =  Order::where(['category_order_id' => $category, 'ket_persetujuan_kepala_uptd' => 'setuju', 'ket_persetujuan_kepala_uptd' => 'setuju'])->paginate(5);
         }
         return view('order', [
             'orders' => $orders,
@@ -40,7 +43,7 @@ class OrderController extends Controller
         ]);
     }
 
-    public function ordersExcel(Request $request, $category)
+    public function ordersExcel(Request $request)
     {
         $validated = $request->validate([
             'tanggal_awal' => 'date',
@@ -53,7 +56,7 @@ class OrderController extends Controller
         ->join('tenants', 'tenants.id', '=', 'orders.tenant_id')
         ->where('ket_persetujuan_kepala_dinas', 'setuju')
         ->whereBetween('orders.created_at', [$tanggal_awal, $tanggal_akhir])
-        ->where('category_order_id', $category)->get();
+        ->where('category_order_id', request('category'))->get();
         // $detail_orders = DB::table('orders')
         // ->join('detail_orders', 'detail_orders.order_id', '=', 'orders.id')
         // ->join('equipments', 'detail_orders.equipment_id', '=', 'equipments.id')
@@ -115,9 +118,9 @@ class OrderController extends Controller
 
     public function downloadPermohonan($id){
         $model_file = Order::findOrFail($id); //Mencari model atau objek yang dicari
-        $surat_permohonan = trim($model_file->surat_permohonan, 'surat_permohonan/');
-        $file = public_path() . '/storage/surat_permohonan/' . $surat_permohonan;//Mencari file dari model yang sudah dicari
-        return response()->download($file, $surat_permohonan); //Download file yang dicari berdasarkan nama file
+        // $surat_permohonan = trim($model_file->surat_permohonan, 'surat_permohonan/');
+        $file = public_path() . '/storage/surat_permohonan/' . $model_file->surat_permohonan;//Mencari file dari model yang sudah dicari
+        return response()->download($file, $model_file->surat_permohonan); //Download file yang dicari berdasarkan nama file
     }
 
     public function downloadAkta($id){
@@ -125,6 +128,20 @@ class OrderController extends Controller
         $akta_notaris = trim($model_file->akta_notaris, 'akta_notaris/');
         $file = public_path() . '/storage/akta_notaris/' . $akta_notaris;//Mencari file dari model yang sudah dicari
         return response()->download($file, $akta_notaris); //Download file yang dicari berdasarkan nama file
+    }
+
+    public function downloadKtp($id){
+        $model_file = Order::findOrFail($id); //Mencari model atau objek yang dicari
+        $ktp = trim($model_file->ktp, 'ktp/');
+        $file = public_path() . '/storage/ktp/' . $ktp;//Mencari file dari model yang sudah dicari
+        return response()->download($file, $ktp); //Download file yang dicari berdasarkan nama file
+    }
+
+    public function downloadSuratPengantar($id){
+        $model_file = Order::findOrFail($id); //Mencari model atau objek yang dicari
+        $surat_ket = trim($model_file->surat_ket, 'surat_ket/');
+        $file = public_path() . '/storage/surat_ket/' . $surat_ket;//Mencari file dari model yang sudah dicari
+        return response()->download($file, $surat_ket); //Download file yang dicari berdasarkan nama file
     }
 
 
@@ -139,6 +156,8 @@ class OrderController extends Controller
 
         if ($result) {
             //redirect dengan pesan sukses
+            // Mail::to($result->email)->send(new MailNotify($result->username));
+            // return $result;
             return redirect()->action([DokumenSewaController::class, 'dokumenSewa'], ['id' => $tes]);
         } else {
             //redirect dengan pesan error

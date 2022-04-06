@@ -4,12 +4,12 @@
   \Carbon\Carbon::setLocale('id');
   \Carbon\Carbon::now()->formatLocalized("%A, %d %B %Y");
 ?>
-{{-- <?php
+<?php
 // Skrip berikut ini adalah skrip yang bertugas untuk meng-export data tadi ke excell
 header("Content-type: application/vnd-ms-excel");
-header("Content-Disposition: attachment; filename=Daftar-Order-Umum.xls");
+header("Content-Disposition: attachment; filename=Daftar-Refund.xls");
 
-?> --}}
+?>
 <!DOCTYPE html>
 <html>
   <head>
@@ -46,16 +46,11 @@ header("Content-Disposition: attachment; filename=Daftar-Order-Umum.xls");
   <!-- jquery -->
   </head>
   <body>
-    {{-- <?php
-      if(Request::path() === 'orders-excel/1'){
-        $judul='UMUM'
-      }
-    ?> --}}
     <center><h3 style="margin-bottom: 24px"><b>REKAPITULASI PENGEMBALIAN DANA</b></h3></center>
     <br>
     <table border="1">
-      <thead bgcolor="#F4F4F">
-        <tr align="center">
+      <thead>
+        <tr align="center" style="text-align:center !important; vertical-align: middle !important; background-color:#FAD603">
           <td rowspan="1"><h6><b>NO.</b></h6></td>
           <td rowspan="1"><h6><b>KODE PEMESANAN</b></h6></td>
           <td rowspan="1"><h6><b>NAMA KEGIATAN</b></h6></td>
@@ -65,35 +60,39 @@ header("Content-Disposition: attachment; filename=Daftar-Order-Umum.xls");
           <td rowspan="1"><h6><b>NO. KONTRAK</b></h6></td>
           <td colspan="1"><h6><b>TANGGAL KONTRAK</b></h6></td>
           <td rowspan="1"><h6><b>METODE PENGEMBALIAN DANA</b></h6></td>
+          <td rowspan="1" width="15%"><h6><b>NAMA ALAT</b></h6></td>
           <td rowspan="1"><h6><b>JUMLAH HARI REFUND</b></h6></td>
           <td rowspan="1"><h6><b>JUMLAH JAM REFUND</b></h6></td>
-          <td colspan="1"><h6><b>NAMA ALAT</b></h6></td>
           <td rowspan="1"><h6><b>JUMLAH REFUND</b></h6></td>
         </tr>
       </thead>
       <tbody class="list">
         <?php $no = 0 ?>
-        @if($refunds->count()>0)
-          <?php $detail_refunds = DB::table('detail_refunds')
+        <?php
+          $detail_refunds = DB::table('detail_refunds')
           ->join('refunds', 'refunds.id', '=', 'detail_refunds.refund_id')
-          ->where('detail_refunds.refund_id', 'refunds.id')
-          ->where('ket_persetujuan_kepala_dinas', 'setuju')
-          ->get(); ?>
-          @foreach ($refunds1 as $refund)
-              <?php
-                setlocale(LC_TIME, 'id_ID');
-                \Carbon\Carbon::setLocale('id');
-                \Carbon\Carbon::now()->formatLocalized("%A, %d %B %Y");
-                $tanggal_mulai = new DateTime($refund->tanggal_mulai);
-                $tanggal_selesai = new DateTime($refund->tanggal_selesai);
-                $total_waktu = $tanggal_selesai->diff($tanggal_mulai);
-              ?>
-            <?php $no++ ?>
-            <tr style="text-align:center !important;">
-              <td class="no">
+          ->join('orders', 'orders.id', '=', 'refunds.order_id')
+          ->join('tenants', 'tenants.id', '=', 'orders.tenant_id')
+          ->join('equipments', 'detail_refunds.equipment_id', '=', 'equipments.id')
+          ->where('detail_refunds.ket_persetujuan_kepala_dinas', 'setuju')
+          ->get();
+        ?>
+        {{-- <?php
+          setlocale(LC_TIME, 'id_ID');
+          \Carbon\Carbon::setLocale('id');
+          \Carbon\Carbon::now()->formatLocalized("%A, %d %B %Y");
+          $tanggal_mulai = new DateTime($refund->tanggal_mulai);
+          $tanggal_selesai = new DateTime($refund->tanggal_selesai);
+          $total_waktu = $tanggal_selesai->diff($tanggal_mulai);
+        ?> --}}
+        @if($refund->count()>0)
+          <?php $no++ ?>
+          @foreach ($refund as $refund)
+            <tr style="text-align:center !important; vertical-align: middle !important">
+              <td class="no" valign="middle">
                 {{ $no }}
               </td>
-              <td>
+              <td valign="middle" style="margin-bottom: 80px !important">
                 <b>ALB-{{ $refund->id }}</b>
               </td>
               <td>
@@ -117,12 +116,49 @@ header("Content-Disposition: attachment; filename=Daftar-Order-Umum.xls");
               <td>
                 <b>{{ $refund->metode_refund }}</b>
               </td>
+              <td>
+                @foreach ($detail_refunds as $detail_refund)
+                  <ul type="none">
+                    <li>
+                      <b>{{ $detail_refund->nama }}</b>
+                    </li>
+                  </ul>
+                @endforeach
+              </td>
+              <td>
+                @foreach ($detail_refunds as $detail_refund)
+                <ul type="none">
+                  <li>
+                    <b>{{ $detail_refund->jumlah_hari_refund }}</b>
+                  </li>
+                </ul>
+                @endforeach
+              </td>
+              <td>
+                @foreach ($detail_refunds as $detail_refund)
+                <ul type="none">
+                  <li>
+                    <b>{{ $detail_refund->jumlah_jam_refund }}</b>
+                  </li>
+                </ul>
+                @endforeach
+              </td>
+              <td style="width: 130px;">
+                <?php $total =0; ?>
+                @foreach ($detail_refunds as $detail_refund)
+                  <?php
+                    $jumlah = ($detail_refund->harga_sewa_perhari * $detail_refund->jumlah_hari_refund) + ($detail_refund->harga_sewa_perjam * $detail_refund->jumlah_hari_refund);
+                    $total = $total + $jumlah;
+                  ?>
+                @endforeach
+                <b>{{ 'Rp. ' . number_format($total, 2, ",", ".") }}</b>
+              </td>
             </tr>
           @endforeach
         @else
           <tr>
-            <td colspan="12" align="center">
-              <p>Tidak ada data!</p>
+            <td colspan="13" style="text-align: center">
+              Tidak ada data!
             </td>
           </tr>
         @endif

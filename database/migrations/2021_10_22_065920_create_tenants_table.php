@@ -15,15 +15,15 @@ class CreateTenantsTable extends Migration
     {
         Schema::create('tenants', function (Blueprint $table) {
             $table->id();
-            $table->string('nama')->default('');
-            $table->string('foto')->default('');
-            $table->string('email')->default('');
+            $table->string('nama')->nullable();
+            $table->string('foto')->nullable();
+            $table->string('email')->unique()->nullable();
             $table->timestamp('email_verified_at');
-            $table->string('username')->default('');
-            $table->string('password')->default('');
-            $table->string('no_hp')->default('');
-            $table->string('kontak_darurat')->default('');
-            $table->string('alamat')->default('');
+            $table->string('username')->nullable();
+            $table->string('password')->nullable();
+            $table->string('no_hp')->nullable();
+            $table->string('kontak_darurat')->nullable();
+            $table->string('alamat')->nullable();
             $table->string('status')->default('aktif');
             $table->timestamps();
         });

@@ -14,7 +14,14 @@ class EquipmentController extends Controller
 {
     public function index()
     {
-        $tenants = Equipment::paginate(8);
+        $tenants = DB::table('equipments')->whereBetween('id', [1, 12])->where('jumlah_tersedia', '>', 0)->get();
+        // $tenants = DB::table('equipments')->whereBetween('id', [1, 7])->orWhere('nama', 'Lainnya')->get();
+        return response()->json(EquipmentResource::collection($tenants));
+    }
+
+    public function all()
+    {
+        $tenants = DB::table('equipments')->where('jumlah_tersedia', '>', 0)->get();
         // $tenants = DB::table('equipments')->whereBetween('id', [1, 7])->orWhere('nama', 'Lainnya')->get();
         return response()->json(EquipmentResource::collection($tenants));
     }
