@@ -2,12 +2,17 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\PemberitahuanRescheduleBerhasil;
 use App\Models\Reschedule;
 use App\Models\Order;
 use App\Models\Schedule;
 use App\Models\DetailReschedule;
+use App\Models\DetailOrder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\Mail\Reschedule as Reschedules;
+use App\Mail\Tolak;
+use Illuminate\Support\Facades\Mail;
 
 class RescheduleController extends Controller
 {
@@ -76,7 +81,7 @@ class RescheduleController extends Controller
                      ->where('detail_reschedules.ket_persetujuan_kepala_uptd', 'setuju')
                      ->whereColumn('detail_reschedules.reschedule_id', 'reschedules.id');
            })
-           ->get();
+        ->get();
 
         $detail_reschedules = DB::table('detail_reschedules')
         ->join('reschedules', 'reschedules.id', '=', 'detail_reschedules.reschedule_id')
@@ -130,8 +135,7 @@ class RescheduleController extends Controller
             'equipments.harga_sewa_perhari',
             'equipments.harga_sewa_perjam',
             'detail_reschedules.ket_verif_admin',
-            'detail_reschedules.ket_persetujuan_kepala_uptd',
-            'detail_reschedules.ket_konfirmasi')
+            'detail_reschedules.ket_persetujuan_kepala_uptd',)
             ->get();
         }
         // $detail_refund = DB::table('refunds')->join('detail_refunds', 'detail_refunds.refund_id', '=', 'refunds.id')->get();
@@ -202,6 +206,7 @@ class RescheduleController extends Controller
     }
 
     public function verifRescheduleAdmin(DetailReschedule $id){
+        $tes=$id->id;
         $result = DB::transaction(function () use ($id) {
             $id->update([
                 'ket_verif_admin' => 'verif'
@@ -211,6 +216,14 @@ class RescheduleController extends Controller
 
         if ($result) {
             //redirect dengan pesan sukses
+            $data = DB::table('detail_reschedules')
+                ->join('orders', 'detail_reschedules.order_id', '=', 'orders.id')
+                ->join('tenants', 'orders.tenant_id', '=', 'tenants.id')
+                // ->where('orders.id', '=', $tes)
+                ->first();
+            $staff = DB::table('users')
+                ->where('jabatan', '=', 'kepala uptd')->first();
+            Mail::to($staff->email)->send(new Reschedules($data));
             return redirect()->route('reschedules.index')->with('success', 'Verifikasi pengajuan reschedule berhasil!');
         } else {
             //redirect dengan pesan error
@@ -219,6 +232,7 @@ class RescheduleController extends Controller
     }
 
     public function tolakRescheduleAdmin(Request $request, DetailReschedule $id){
+        $tes=$id->id;
         $validated = $request->validate([
             'alasan' => 'string',
         ]);
@@ -233,6 +247,13 @@ class RescheduleController extends Controller
 
         if ($result) {
             //redirect dengan pesan sukses
+            $data = DB::table('detail_reschedules')
+            ->join('orders', 'detail_reschedules.order_id', '=', 'orders.id')
+            ->join('tenants', 'orders.tenant_id', '=', 'tenants.id')
+            ->where('detail_reschedules.id', '=', $tes)->first();
+            $status='perubahan jadwal';
+            $alasan=$validated['alasan'];
+            Mail::to($data->email)->send(new Tolak($data, $status, $alasan));
             return redirect()->route('reschedules.index')->with('success', 'Penolakan pengajuan reschedule berhasil!');
         } else {
             //redirect dengan pesan error
@@ -241,6 +262,7 @@ class RescheduleController extends Controller
     }
 
     public function setujuRescheduleKepalaUPTD(DetailReschedule $id){
+        $tes=$id->id;
         $result = DB::transaction(function () use ($id) {
             $id->update([
                 'ket_persetujuan_kepala_uptd' => 'setuju'
@@ -250,7 +272,24 @@ class RescheduleController extends Controller
 
         if ($result) {
             //redirect dengan pesan sukses
-            return redirect()->route('editSchedule', ['id' => $id])->with('success', 'Persetujuan pengajuan reschedule berhasil!');
+            $data = DB::table('detail_reschedules')
+                ->join('orders', 'detail_reschedules.order_id', '=', 'orders.id')
+                ->join('tenants', 'orders.tenant_id', '=', 'tenants.id')
+                ->where('detail_reschedules.id', '=', $tes)
+                ->first();
+            $staff = DB::table('users')
+                ->where('jabatan', '=', 'kepala uptd')->first();
+            $detail_order =  DB::table('detail_reschedules')
+                ->join('detail_orders', 'detail_reschedules.detail_order_id', '=', 'detail_orders.id')
+                ->where('detail_reschedules.id', '=', $tes)
+                ->select('detail_orders.id as detail_order_id')
+                ->first();
+            Mail::to($data->email)->send(new PemberitahuanRescheduleBerhasil($data));
+            if($data->ket_persetujuan_kepala_uptd == 'setuju'){
+                return redirect()->route('editSchedule', ['id' => $id])->with('success', 'Persetujuan pengajuan reschedule berhasil!');
+            }else{
+                return redirect()->route('reschedules.index')->with('success', 'Persetujuan pengajuan reschedule berhasil!');
+            }
         } else {
             //redirect dengan pesan error
             return redirect()->route('reschedules.index')->with('error', 'Persetujuan pengajuan reschedule gagal!');
@@ -258,19 +297,24 @@ class RescheduleController extends Controller
     }
 
     public function editSchedule($id){
-
-        $tenant=Schedule::where('detail_order_id', $id)->first();
+        $tenant=DB::table('schedules')
+            ->join('detail_orders', 'schedules.detail_order_id', '=', 'detail_orders.id')
+            ->join('detail_reschedules', 'detail_reschedules.detail_order_id', '=', 'detail_orders.id')
+            ->join('orders', 'schedules.order_id', '=', 'orders.id')
+            ->where('detail_reschedules.id', $id)
+            ->select('schedules.id', 'detail_reschedules.waktu_mulai', 'detail_reschedules.waktu_selesai')
+            ->first();
         $orderan=DB::table('orders')->get();
         $order=DB::table('detail_reschedules')
-        // ->where('detail_reschedules.id', $id)
+        ->where('detail_reschedules.id', $id)
         ->select('detail_reschedules.waktu_mulai', 'detail_reschedules.waktu_selesai')
         ->first();
+        // dd($tenant);
         $result = DB::transaction(function () use ($id, $tenant, $order) {
-            $tenant->update([
-                'tanggal_mulai' => $order->waktu_mulai,
-                'tanggal_selesai' => $order->waktu_selesai
+            DB::table('schedules')->where('id','=', $tenant->id)->update([
+                'tanggal_mulai' => $tenant->waktu_mulai,
+                'tanggal_selesai' => $tenant->waktu_selesai
             ]);
-            return $tenant->save();
         });
 
         if ($result) {
@@ -283,6 +327,7 @@ class RescheduleController extends Controller
     }
 
     public function tolakRescheduleKepalaUPTD(Request $request, DetailReschedule $id){
+        $tes=$id->id;
         $validated = $request->validate([
             'alasan' => 'string',
         ]);
@@ -297,6 +342,13 @@ class RescheduleController extends Controller
 
         if ($result) {
             //redirect dengan pesan sukses
+            $data = DB::table('detail_reschedules')
+            ->join('orders', 'detail_reschedules.order_id', '=', 'orders.id')
+            ->join('tenants', 'orders.tenant_id', '=', 'tenants.id')
+            ->where('detail_reschedules.id', '=', $tes)->first();
+            $status='perubahan jadwal';
+            $alasan=$validated['alasan'];
+            Mail::to($data->email)->send(new Tolak($data, $status, $alasan));
             return redirect()->route('reschedules.index')->with('success', 'Penolakan pengajuan reschedule berhasil!');
         } else {
             //redirect dengan pesan error

@@ -7,10 +7,10 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
-class MailNotify extends Mailable
+class SialbertEmail extends Mailable
 {
     use Queueable, SerializesModels;
-    public $details;
+
     /**
      * Create a new message instance.
      *

@@ -34,6 +34,11 @@
                                 <img class="img-preview img-fluid mb-3 col-sm-5">
                                 <input class="form-control @error('foto') is-invalid @enderror" type="file" id="foto" name="foto" onchange="previewImage()" style="margin-top:16px;">
                                 {{-- <input type="file" name="foto" id="foto" class="form-control" style="margin-top:16px;"/> --}}
+                                @error('foto')
+                                  <div class="invalid-feedback">
+                                    {{ $message }}
+                                  </div>
+                                @enderror
                                 <span class="help-block">Silahkan upload foto untuk update.</span>
                               </div>
                             </div>

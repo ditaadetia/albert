@@ -80,6 +80,7 @@ class formulirSewaController extends Controller
         ->update([
             'surat_permohonan' => 'surat_permohonan_' . $orders->nama_instansi .'_'. $orders->id . '.pdf'
         ]);
+        return response()->json(["status" => "success", "success" => true, "message" => "Berhasil!"]);
         // return redirect()->route('index', ['category' => '1'])->with('success', 'Verifikasi pengajuan penyewaan berhasil!');
     }
 }

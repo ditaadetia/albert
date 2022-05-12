@@ -13,7 +13,7 @@
     <!-- Page plugins -->
     <!-- Argon CSS -->
     <link rel="stylesheet" href="{{ asset('assets/css/argon.css?v=1.2.0" type="text/css') }}">
-    <link rel="shortcut icon" type="image/x-icon" href="{{ asset('img/logo_pupr.jpeg') }}">
+    <link rel="shortcut icon" type="image/x-icon" href="{{ asset('img/logo_kota_pontianak.png') }}">
     <!-- Fonts -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700">
     <!-- Icons -->
@@ -73,7 +73,7 @@
         <div class="card shadow">
             <div class="card-body" style="padding-left: 3cm; padding-right:2cm">
                 <div class="header">
-                    <img src="{{ asset('img/Logo-Kota-Pontianak.jpg') }}" alt="" style="width:100px; height:90px;">
+                    <img src="{{ asset('img/logo_kota_pontianak.png') }}" alt="" style="width:100px; height:90px;">
                     <h5 class="judul text-center">PEMERINTAH KOTA PONTIANAK<br><b><span class="font24">DINAS PEKERJAAN UMUM DAN PENATAAN RUANG</span></b><br><small>Alamat Jalan A. Yani Telpon : +62561-732300 Fax : +62561-747329</small><br><span class="font12"><b>PONTIANAK - KALBAR</b><span></h5>
                 </div>
                 <p class="p" style="text-align: right">Pontianak, {{ Carbon::now()->isoFormat('d MMMM YYYY') }}</p>

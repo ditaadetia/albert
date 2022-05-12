@@ -14,11 +14,8 @@ class DetailOrder extends Model
     protected $dates = ['created_at'];
 
     // protected $fillable = [
-    //     'user_id',
+    //     'order_id',
     //     'equipment_id',
-    //     'jumlah_jam_sewa',
-    //     'jumlah_hari_sewa',
-    //     'harga',
     //     'tanggal_ambil',
     //     'tanggal_kembali',
     //     'status'

@@ -9,7 +9,7 @@
         <!-- Icons -->
         <!-- Page plugins -->
         <!-- Argon CSS -->
-        <link rel="shortcut icon" type="image/x-icon" href="{{ asset('img/logo_pupr.jpeg') }}">
+        <link rel="shortcut icon" type="image/x-icon" href="{{ asset('img/logo_kota_pontianak.png') }}">
     <style>
         .header {
             width: 100%;

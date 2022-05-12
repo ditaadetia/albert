@@ -8,6 +8,9 @@ use App\Models\Order;
 use App\Models\Skr;
 use PDF;
 use App\Models\DetailPayment;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\SKR as suratKetetapanRetribusi;
+use Illuminate\Support\Facades\Request as FacadesRequest;
 
 class SkrController extends Controller
 {
@@ -28,6 +31,7 @@ class SkrController extends Controller
         // ->join('detail_orders', 'detail_orders.order_id', '=', 'orders.id')
         ->join('tenants', 'orders.tenant_id', '=', 'tenants.id')
         ->where('orders.id', $id)
+        ->select('orders.id', 'tenants.nama', 'tenants.foto', 'tenants.no_hp', 'tenants.kontak_darurat')
         ->first();
 
         return view('detail_skr', [
@@ -123,6 +127,28 @@ class SkrController extends Controller
                 ]);
             });
         }
+        $data = DB::table('orders')
+            ->join('tenants', 'orders.tenant_id', '=', 'tenants.id')->where('orders.id', '=', $id)->first();
+        // $data['nama_instansi'] = $tes->nama_instansi;
+        $position='admin_to_kepala_uptd';
+        $alat = DB::table('detail_orders')
+            ->join('equipments', 'detail_orders.equipment_id', '=', 'equipments.id')
+            ->join('orders', 'detail_orders.order_id', '=', 'orders.id')
+            ->where('detail_orders.order_id', '=', $id)->get();
+        $total =0;
+        foreach($alat as $alat){
+            $awal=date_create($alat->tanggal_mulai);
+            $akhir=date_create($alat->tanggal_selesai);
+            $diff=date_diff($awal, $akhir);
+            if($diff->days >0){
+                $harga = $alat->harga_sewa_perhari * $diff->days;
+            }
+            else{
+                $harga = $alat->harga_sewa_perjam * $diff->h;
+            }
+            $total= $total + $harga;
+        }
+        Mail::to($data->email)->send(new suratKetetapanRetribusi($data, $total));
         return redirect()->action([generateSkrController::class, 'generateSkr'], ['id' => $id]);
     }
 }

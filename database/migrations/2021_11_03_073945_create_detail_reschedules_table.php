@@ -21,7 +21,8 @@ class CreateDetailReschedulesTable extends Migration
             $table->dateTime('waktu_selesai')->nullable;
             $table->enum('ket_verif_admin', ['belum', 'verif', 'tolak'])->default('belum');
             $table->enum('ket_persetujuan_kepala_uptd', ['belum', 'setuju', 'tolak'])->default('belum');
-            $table->string('keterangan')->nullable;
+            $table->string('keterangan')->default('');
+            $table->string('alasan_refund')->default('');
             $table->timestamps();
         });
     }

@@ -15,15 +15,8 @@ class CreateDetailRefundsTable extends Migration
     {
         Schema::create('detail_refunds', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('refund_id');
-            $table->foreignId('equipment_id');
-            $table->integer('jumlah_hari_refund')->nullable;
-            $table->integer('jumlah_jam_refund')->nullable;
-            $table->string('alasan')->nullable;
-            $table->enum('ket_verif_admin', ['belum', 'verif', 'tolak'])->nullable;
-            $table->enum('ket_persetujuan_kepala_uptd', ['belum', 'setuju', 'tolak'])->nullable;
-            $table->enum('ket_persetujuan_kepala_dinas', ['belum', 'setuju', 'tolak'])->nullable;
-            $table->string('ket_konfirmasi')->nullable;
+            $table->foreignId('order_id');
+            $table->foreignId('detail_order_id');
             $table->timestamps();
         });
     }

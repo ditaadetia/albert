@@ -13,7 +13,7 @@
       <div class="card bg-default shadow" style="border-radius:50px !important;">
         <div class="card-header bg-default">
           <div class="row">
-            <div class="col-9">
+            <div class="col-10">
               <form class="navbar-search navbar-search-light form-inline mr-sm-3" id="navbar-search-main" action="/cari-order" method="get">
                 <input type="hidden" name="category" value="{{ request('category') }}">
                 <div class="form-group mb-0">
@@ -30,7 +30,7 @@
               </form>
             </div>
             @can('kepala_uptd')
-              <div class="col-3">
+              <div class="col-2">
                 <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="Export ke Excel">
                   <img src="{{ asset('assets/img/icons/common/excel.png') }}">
                   <span class="nav-link-text">Export ke Excel</span>
@@ -38,7 +38,7 @@
               </div>
             @endcan
             @can('kepala_dinas')
-              <div class="col-3">
+              <div class="col-2">
                 <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="Export ke Excel">
                   <img src="{{ asset('assets/img/icons/common/excel.png') }}">
                   <span class="nav-link-text">Export ke Excel</span>
@@ -52,7 +52,7 @@
                     <h5 class="modal-title" id="exampleModalLabel">Rentang Waktu Rekapitulasi Penyewaan</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                   </div>
-                    <form action="{{ route('ordersExcel') }}" method="POST" class="well" id="block-validate">
+                    <form action="{{ route('ordersExcel', ['category' => request('category')]) }}" method="POST" class="well" id="block-validate">
                       @csrf
                       @method('PUT')
                       <div class="modal-body">

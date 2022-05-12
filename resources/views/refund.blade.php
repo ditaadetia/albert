@@ -78,8 +78,11 @@
                 <th style="color:white !important;" scope="col">No.</th>
                 <th style="color:white !important;" scope="col">Nama Kegiatan</th>
                 <th style="color:white !important;" scope="col">Nama Penyewa</th>
-                {{-- <th style="color:white !important;" scope="col">Kategori</th> --}}
-                <th style="color:white !important;" scope="col">Pengajuan belum disetujui</th>
+                <th style="color:white !important;" scope="col">Nama Bank</th>
+                <th style="color:white !important;" scope="col">Nomor Rekening</th>
+                <th style="color:white !important;" scope="col">Nama di Rekening</th>
+                <th style="color:white !important;" scope="col">Kategori</th>
+                {{-- <th style="color:white !important;" scope="col">Pengajuan belum disetujui</th> --}}
                 {{-- <th style="color:white !important;" scope="col">Nama Instansi</th>
                 <th style="color:white !important;" scope="col">Jabatan</th>
                 <th style="color:white !important;" scope="col">Alamat Instansi</th> --}}
@@ -89,64 +92,82 @@
             </thead>
             <tbody class="list">
               <?php $no = 0 ?>
-              @can('admin')
-                <?php
-                  $tenant=DB::table('detail_refunds')->get();
-                ?>
-              @endcan
-              @can('kepala_uptd')
-                <?php
-                  $tenant=DB::table('detail_refunds')->where('ket_verif_admin', 'verif')->get();
-                ?>
-              @endcan
-              @can('kepala_dinas')
-                <?php
-                  $tenant=DB::table('detail_refunds')->where('ket_persetujuan_kepala_uptd', 'setuju')->get();
-                ?>
-              @endcan
               @if($tenant->count()>0)
-                @foreach ($refunds as $refund)
-                  @if($refund->refund->count()>0)
-                  <?php $no++ ?>
-                    <tr style="text-align:center !important;" valign="middle">
-                      <td class="no" valign="middle">
-                        {{ $no }}
-                      </td>
-                      <td valign="middle">
-                        {{ $refund->order->nama_kegiatan }}
-                      </td>
-                      <td>
-                        {{ $refund->tenant->nama }}
-                      </td>
-                      {{-- <td>
-                        @if($refund->order->category_order_id == 1)
-                          Penyewa Umum
-                        @elseif($refund->order->category_order_id == 2)
-                          Penyewa PUPR
-                        @elseif($refund->order->category_order_id == 3)
-                          Kegiatan Masyarakat
-                        @endif
-                      </td> --}}
-                      <td>
-                        <b>{{ $refund->detail_refund->count() }}</b> perlu disetujui
-                      </td>
-                      {{-- <td>
-                        @if($refund->detail_refund->ket_verif_admin === 0 and $refund->detail_refund->ket_konfirmasi == '')
-                          Belum diverifikasi
-                        @elseif($refund->detail_refund->ket_verif_admin === 1)
-                          Pengajuan diterima
-                        @elseif($refund->detail_refund->ket_verif_admin === 0 and $refund->detail_refund->ket_konfirmasi != '')
-                          Pengajuan ditolak
-                        @endif
-                      </td> --}}
-                      <td>
-                        <a href="{{ route('refunds.show', ['refund' => $refund->id]) }}">
-                          <i class="fa fa-search"></i>
-                          <span class="nav-link-text">Detail</span>
-                        </a>
-                      </td>
-                    </tr>
-                  @endif
+                @foreach ($tenant as $refund)
+                <?php $no++ ?>
+                @can('admin')
+                  <?php
+                    $persetujuan = DB::table('detail_refunds')
+                    ->join('orders', 'orders.id', '=', 'detail_refunds.order_id')
+                    ->join('refunds', 'orders.id', '=', 'refunds.order_id')
+                    ->where('detail_refunds.order_id', '=', $refund->id)
+                  ?>
+                @endcan
+                @can('kepala_uptd')
+                  <?php
+                    $persetujuan = DB::table('detail_refunds')
+                    ->join('orders', 'orders.id', '=', 'detail_refunds.order_id')
+                    ->join('refunds', 'orders.id', '=', 'refunds.order_id')
+                    ->where('detail_refunds.order_id', '=', $refund->id)
+                  ?>
+                @endcan
+                @can('kepala_dinas')
+                  <?php
+                    $persetujuan = DB::table('detail_refunds')
+                    ->join('orders', 'orders.id', '=', 'detail_refunds.order_id')
+                    ->join('refunds', 'orders.id', '=', 'refunds.order_id')
+                    ->where('detail_refunds.order_id', '=', $refund->id)
+                  ?>
+                @endcan
+                <tr style="text-align:center !important;" valign="middle">
+                  <td class="no" valign="middle">
+                    {{  $no }}
+                  </td>
+                  <td valign="middle">
+                    {{ $refund->nama_kegiatan }}
+                  </td>
+                  <td>
+                    {{ $refund->nama }}
+                  </td>
+                  <td>
+                    {{ $refund->metode_refund }}
+                  </td>
+                  <td>
+                    {{ $refund->no_rekening }}
+                  </td>
+                  <td>
+                    {{ $refund->nama_penerima }}
+                  </td>
+                  <td>
+                    @if($refund->category_order_id == 1)
+                      Umum
+                    @elseif($refund->category_order_id == 2)
+                      Kegiatan Rutin
+                    @elseif($refund->category_order_id == 3)
+                      Dinas Lain
+                    @elseif($refund->category_order_id == 4)
+                      Kegiatan Masyarakat
+                    @endif
+                  </td>
+                  {{-- <td>
+                    <b>{{ $persetujuan->count() }}</b> perlu disetujui
+                  </td> --}}
+                  {{-- <td>
+                    @if($refund->detail_refund->ket_verif_admin === 0 and $refund->detail_refund->ket_konfirmasi == '')
+                      Belum diverifikasi
+                    @elseif($refund->detail_refund->ket_verif_admin === 1)
+                      Pengajuan diterima
+                    @elseif($refund->detail_refund->ket_verif_admin === 0 and $refund->detail_refund->ket_konfirmasi != '')
+                      Pengajuan ditolak
+                    @endif
+                  </td> --}}
+                  <td>
+                    <a href="{{ route('refunds.show', ['refund' => $refund->id]) }}">
+                      <i class="fa fa-search"></i>
+                      <span class="nav-link-text">Detail</span>
+                    </a>
+                  </td>
+                </tr>
                 @endforeach
               @else
                 <tr>
@@ -159,7 +180,7 @@
           </table>
         </div>
         <div class="card-footer justify-content-end py-4">
-          {{ $refunds->links() }}
+          {{ $tenant->links() }}
         </div>
       </div>
     </div>

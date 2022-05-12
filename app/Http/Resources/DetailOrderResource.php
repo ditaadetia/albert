@@ -23,10 +23,10 @@ class DetailOrderResource extends JsonResource
             'id' => $this->id,
             'order_id' => $this->order_id,
             'equipment_id' => $this->equipment_id,
-            'nama' => $this->nama,
-            // 'tanggal_ambil' => $this->tanggal_ambil,
-            // 'tanggal_kembali' => $this->tanggal_kembali,
-            // 'status' => $this->status,
+            'tanggal_ambil' => $this->tanggal_ambil,
+            'tanggal_kembali' => $this->tanggal_kembali,
+            'status' => $this->status,
+            'pembatalan' => $this->pembatalan,
         ];
     }
 }

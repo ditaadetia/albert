@@ -56,7 +56,7 @@
 					$equipment = DB::table('orders')
 					->join('detail_orders', 'detail_orders.order_id', '=', 'orders.id')
 					->join('equipments', 'detail_orders.equipment_id', '=', 'equipments.id')
-					->where('orders.id', $skr->id)
+					->where('orders.id', request('id'))
 					->select('orders.id', 'equipments.nama', 'equipments.foto', 'orders.tanggal_mulai', 'orders.tanggal_selesai', 'equipments.harga_sewa_perhari', 'equipments.harga_sewa_perjam')
 					// $detail_refund = DB::table('refunds')->join('detail_refunds', 'detail_refunds.refund_id', '=', 'refunds.id')->get();
 					->get();
@@ -232,7 +232,7 @@
 				<p style="margin-top: -10px"><b>Kota Pontianak</b></p>
 				<?php $path = public_path('storage');
 				$pdf=$path . '/' . $skr->ttd_kepala_dinas;?>
-				<img src="{{ $pdf }}" alt="" style="width:60px; height:60px;">
+				{{-- <img src="{{ $pdf }}" alt="" style="width:60px; height:60px;"> --}}
 				<p style="text-decoration: underline;"><b>{{ $kepala_dinas->name }}</b></p>
 				<p style="margin-top: -10px"><b>NIP. {{ $kepala_dinas->nip }}</b></p>
 			</td>

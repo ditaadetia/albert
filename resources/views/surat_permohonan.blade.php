@@ -11,7 +11,7 @@
         <link rel="stylesheet" href="assets/vendor/nucleo/css/nucleo.css'" type="text/css">
         <!-- Page plugins -->
         <!-- Argon CSS -->
-        <link rel="shortcut icon" type="image/x-icon" href="{{ asset('img/logo_pupr.jpeg') }}">
+        <link rel="shortcut icon" type="image/x-icon" href="{{ asset('img/logo_kota_pontianak.png') }}">
         <script type="text/javascript" src="assets/js/terbilang.js"></script>
         <style>
             .p{
@@ -47,9 +47,6 @@
             .row {
                 display: flex;
 
-                margin-right: -15px;
-                margin-left: -15px;
-
                 flex-wrap: wrap;
             }
         </style>
@@ -76,25 +73,25 @@
     <br>
     <p>Dengan ini kami mengajukan permohonan untuk menyewa alat berat diantaranya sebagai berikut:</p>
     <?php $no =0?>
-    @foreach ($detail_orders as $detail_order)
-        <?php $no++ ?>
-        <center>
-            <table border="1" style="margin-left: -30px;">
-                <thead style="background: lightslategrey; heigh:5px;">
-                    <tr align="center">
-                        <td>No.</td>
-                        <td>Id Alat</td>
-                        <td>Nama Alat</td>
-                    </tr>
-                </thead>
+    <center>
+        <table border="1">
+            <thead style="background: lightslategrey; heigh:5px;">
+                <tr align="center">
+                    <td>No.</td>
+                    <td>Id Alat</td>
+                    <td>Nama Alat</td>
+                </tr>
+            </thead>
+            @foreach ($detail_orders as $detail_order)
+                <?php $no++ ?>
                 <tr>
                     <td align="center">{{ $no }}.</td>
                     <td align="center">{{ $detail_order->id}}</td>
                     <td align="center">{{ $detail_order->nama}}</td>
                 </tr>
-            </table>
-        </center>
-    @endforeach
+            @endforeach
+        </table>
+    </center>
     <p>Untuk Keperluan :</p>
     <?php
         if($order1->category_order_id == 1)
@@ -168,8 +165,15 @@
         <p style="text-align: center">(Penanggung Jawab Kegiatan)</p>
         @if($order1->ttd_pemohon == null || $order1->ttd_pemohon == '')
             <br><br>
+        @else
+            <center>
+                <?php $path = public_path('storage');
+                $pdf=$path . '/' . $order1->ttd_pemohon;?>
+                <img src="{{ $pdf }}" alt="" style="width:60px; height:60px;">
+            </center>
         @endif
-        <p style="text-align: center">{{ $order1->nama }}</p>
+        {{-- <p style="text-align: center">{{$order1->ttd_kepala_uptd}}</p> --}}
+        <p style="text-align: center">{{$order1->nama}}</p>
     </div>
 </body>
 </html>

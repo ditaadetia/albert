@@ -7,8 +7,8 @@
 <?php
 // Skrip berikut ini adalah skrip yang bertugas untuk meng-export data tadi ke excell
 header("Content-type: application/vnd-ms-excel");
-header("Content-Disposition: attachment; filename=Daftar-Refund.xls");
-
+// header("Content-Disposition: attachment; filename=Daftar-Order-Umum.xls");
+header("Content-Disposition: attachment; filename=Daftar-Pengembalian-Dana.xls");
 ?>
 <!DOCTYPE html>
 <html>
@@ -19,10 +19,9 @@ header("Content-Disposition: attachment; filename=Daftar-Refund.xls");
       <meta name="author" content="Creative Tim">
       <title>SI-ALBERT - UPTD Alat Berat PUPR Kota Pontianak</title>
       <!-- Icons -->
-      <link rel="stylesheet" href="assets/vendor/nucleo/css/nucleo.css'" type="text/css">
       <!-- Page plugins -->
       <!-- Argon CSS -->
-      <link rel="shortcut icon" type="image/x-icon" href="{{ asset('img/logo_pupr.jpeg') }}">
+      <link rel="shortcut icon" type="image/x-icon" href="{{ asset('img/logo_kota_pontianak.png') }}">
       <script type="text/javascript" src="assets/js/terbilang.js"></script>
       <style>
         .text-center {
@@ -57,42 +56,32 @@ header("Content-Disposition: attachment; filename=Daftar-Refund.xls");
           <td rowspan="1"><h6><b>NAMA PERUSAHAAN</b></h6></td>
           <td rowspan="1"><h6><b>ALAMAT PERUSAHAAN</b></h6></td>
           <td rowspan="1"><h6><b>NAMA DIREKTUR</b></h6></td>
-          <td rowspan="1"><h6><b>NO. KONTRAK</b></h6></td>
-          <td colspan="1"><h6><b>TANGGAL KONTRAK</b></h6></td>
+          {{-- <td rowspan="1"><h6><b>NO. KONTRAK</b></h6></td> --}}
+          <td rowspan="1"><h6><b>TANGGAL KONTRAK</b></h6></td>
           <td rowspan="1"><h6><b>METODE PENGEMBALIAN DANA</b></h6></td>
           <td rowspan="1" width="15%"><h6><b>NAMA ALAT</b></h6></td>
-          <td rowspan="1"><h6><b>JUMLAH HARI REFUND</b></h6></td>
-          <td rowspan="1"><h6><b>JUMLAH JAM REFUND</b></h6></td>
           <td rowspan="1"><h6><b>JUMLAH REFUND</b></h6></td>
         </tr>
       </thead>
       <tbody class="list">
         <?php $no = 0 ?>
-        <?php
-          $detail_refunds = DB::table('detail_refunds')
-          ->join('refunds', 'refunds.id', '=', 'detail_refunds.refund_id')
-          ->join('orders', 'orders.id', '=', 'refunds.order_id')
-          ->join('tenants', 'tenants.id', '=', 'orders.tenant_id')
-          ->join('equipments', 'detail_refunds.equipment_id', '=', 'equipments.id')
-          ->where('detail_refunds.ket_persetujuan_kepala_dinas', 'setuju')
-          ->get();
-        ?>
-        {{-- <?php
-          setlocale(LC_TIME, 'id_ID');
-          \Carbon\Carbon::setLocale('id');
-          \Carbon\Carbon::now()->formatLocalized("%A, %d %B %Y");
-          $tanggal_mulai = new DateTime($refund->tanggal_mulai);
-          $tanggal_selesai = new DateTime($refund->tanggal_selesai);
-          $total_waktu = $tanggal_selesai->diff($tanggal_mulai);
-        ?> --}}
         @if($refund->count()>0)
-          <?php $no++ ?>
+        <?php $sum = 0 ?>
           @foreach ($refund as $refund)
+            <?php
+              setlocale(LC_TIME, 'id_ID');
+              \Carbon\Carbon::setLocale('id');
+              \Carbon\Carbon::now()->formatLocalized("%A, %d %B %Y");
+              $tanggal_mulai = new DateTime($refund->tanggal_mulai);
+              $tanggal_selesai = new DateTime($refund->tanggal_selesai);
+              $total_waktu = $tanggal_selesai->diff($tanggal_mulai);
+            ?>
+            <?php $no++ ?>
             <tr style="text-align:center !important; vertical-align: middle !important">
-              <td class="no" valign="middle">
+              <td class="no">
                 {{ $no }}
               </td>
-              <td valign="middle" style="margin-bottom: 80px !important">
+              <td>
                 <b>ALB-{{ $refund->id }}</b>
               </td>
               <td>
@@ -107,58 +96,56 @@ header("Content-Disposition: attachment; filename=Daftar-Refund.xls");
               <td>
                 {{ $refund->nama }}
               </td>
-              <td>
+              {{-- <td>
                 <b>ALB-{{ $refund->id }}</b>
-              </td>
+              </td> --}}
               <td style="width: 145px;">
                 {{ Carbon::parse($refund->created_at)->locale('id')->isoFormat('dddd, D MMMM YYYY') }}
               </td>
               <td>
                 <b>{{ $refund->metode_refund }}</b>
               </td>
+              <?php
+                $detail_orders = DB::table('detail_refunds')
+                ->join('detail_orders', 'detail_refunds.detail_order_id', '=', 'detail_orders.id')
+                ->join('orders', 'detail_refunds.order_id', '=', 'orders.id')
+                ->join('refunds', 'refunds.order_id', '=', 'orders.id')
+                ->join('equipments', 'detail_orders.equipment_id', '=', 'equipments.id')
+                ->where('refunds.id', '=', $refund->id)
+                ->select('orders.tanggal_mulai', 'orders.tanggal_selesai', 'equipments.harga_sewa_perhari', 'equipments.harga_sewa_perjam', 'equipments.nama', 'equipments.jenis', 'equipments.id')->get();
+              ?>
               <td>
-                @foreach ($detail_refunds as $detail_refund)
-                  <ul type="none">
+                @foreach ($detail_orders as $detail_order)
+                  <ul>
                     <li>
-                      <b>{{ $detail_refund->nama }}</b>
+                      {{ $detail_order->nama }}
                     </li>
                   </ul>
                 @endforeach
               </td>
-              <td>
-                @foreach ($detail_refunds as $detail_refund)
-                <ul type="none">
-                  <li>
-                    <b>{{ $detail_refund->jumlah_hari_refund }}</b>
-                  </li>
-                </ul>
-                @endforeach
-              </td>
-              <td>
-                @foreach ($detail_refunds as $detail_refund)
-                <ul type="none">
-                  <li>
-                    <b>{{ $detail_refund->jumlah_jam_refund }}</b>
-                  </li>
-                </ul>
-                @endforeach
-              </td>
               <td style="width: 130px;">
                 <?php $total =0; ?>
-                @foreach ($detail_refunds as $detail_refund)
+                @foreach ($detail_orders as $detail_order)
                   <?php
-                    $jumlah = ($detail_refund->harga_sewa_perhari * $detail_refund->jumlah_hari_refund) + ($detail_refund->harga_sewa_perjam * $detail_refund->jumlah_hari_refund);
+                    $jumlah = ($detail_order->harga_sewa_perhari * $total_waktu->days) + ($detail_order->harga_sewa_perjam * $total_waktu->h);
                     $total = $total + $jumlah;
                   ?>
                 @endforeach
                 <b>{{ 'Rp. ' . number_format($total, 2, ",", ".") }}</b>
               </td>
             </tr>
+            <?php $sum = $total + $sum ?>
           @endforeach
+          <tr>
+            <td colspan="9" style="text-align: center; font-size: 20px"><b>Total </b></td>
+            <td style="text-align: center">
+              <b>{{ 'Rp. ' . number_format($sum, 2, ",", ".") }}</b>
+            </td>
+          </tr>
         @else
           <tr>
-            <td colspan="13" style="text-align: center">
-              Tidak ada data!
+            <td colspan="12" align="center">
+              <p>Tidak ada data!</p>
             </td>
           </tr>
         @endif

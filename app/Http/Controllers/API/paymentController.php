@@ -13,8 +13,14 @@ use Carbon\CarbonPeriod;
 use DateTime;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\pemberitahuanPembayaran;
 use Symfony\Component\HttpFoundation\Response as HttpFoundationResponse;
 use Illuminate\Support\Facades\Storage;
+setlocale(LC_TIME, 'id_ID');
+\Carbon\Carbon::setLocale('id');
+\Carbon\Carbon::now()->formatLocalized("%A, %d %B %Y");
+use Illuminate\Support\Carbon;
 
 class paymentController extends Controller
 {
@@ -88,7 +94,38 @@ class paymentController extends Controller
         });
 
         // return response()->json(['Program created successfully.', new OrderResource($result)]);
-        return response()->json(["status" => "success", "success" => true, "message" => "Edit Profil Berhasil!", 'data' => $order]);
+        $data = DB::table('orders')
+            ->join('tenants', 'orders.tenant_id', '=', 'tenants.id')->where('orders.id', '=', $validator['order_id'])->first();
+        // $data['nama_instansi'] = $tes->nama_instansi;
+        $staff = DB::table('users')
+            ->where('jabatan', '=', 'bendahara')->first();
+        $alat = DB::table('detail_orders')
+            ->join('equipments', 'detail_orders.equipment_id', '=', 'equipments.id')
+            ->join('orders', 'detail_orders.order_id', '=', 'orders.id')
+            ->where('detail_orders.order_id', '=', $validator['order_id'])->get();
+        $total =0;
+        foreach($alat as $alat){
+            $awal=date_create($alat->tanggal_mulai);
+            $akhir=date_create($alat->tanggal_selesai);
+            $diff=date_diff($awal, $akhir);
+            if($diff->days >0){
+                $harga = $alat->harga_sewa_perhari * $diff->days;
+            }
+            else{
+                $harga = $alat->harga_sewa_perjam * $diff->h;
+            }
+            $total= $total + $harga;
+        }
+        $payment = DB::table('payments')
+                ->join('orders', 'payments.order_id', '=', 'orders.id')->where('orders.id', '=', $validator['order_id'])->first();
+        $skr = DB::table('skr')
+                ->join('orders', 'skr.order_id', '=', 'orders.id')->where('orders.id', '=', $validator['order_id'])->first();
+        $umurSkr = new Carbon($skr->created_at);
+        $tanggalPayment = new Carbon($payment->created_at);
+        $total_bayar =  $total;
+        $position='penyewa_to_bendahara';
+        Mail::to($staff->email)->send(new pemberitahuanPembayaran($data, $total_bayar, $position));
+        return response()->json(["status" => "success", "success" => true, "message" => "Pembayaran Berhasil!", 'data' => $order]);
         // if ($result){
         // }
     }

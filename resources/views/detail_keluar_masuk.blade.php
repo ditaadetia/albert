@@ -16,7 +16,7 @@
               <h2><b>{{ $order->tenant->nama }}</b></h2>
             </div>
             <div class="col-2">
-              <img src="{{ asset('img/logo_pupr.jpeg') }}" style="float:right; width:70px; height:70px;" alt="">
+              <img src="{{ asset('img/logo_kota_pontianak.png') }}" style="float:right; width:70px; height:70px;" alt="">
             </div>
           </div>
         </div>
@@ -137,56 +137,54 @@
                       </div>
                     </div>
                     <div class="col-6">
-                      <script>
-                        $(function() {
-                          $('.pop').on('click', function() {
-                            $('.ktp-preview').attr('src',$(this).find('img').attr('src'));
-                            $('#imagemodal').modal('show');
-                            });
-                        });
-                      </script>
                       <div class="col mt-3">
                         <h6 class="text-sm-start">KTP:</h6>
-                        <a href="#" class="pop" style="position: relative;">
-                          <img class="rounded" src="{{ asset('file/ktp/' . $order->ktp) }}" style="width:180px; height:120px; z-index:1; position: relative;" alt="">
-                          <div class="icon icon-shape bg-gradient-info text-white rounded-circle shadow" style="width:60px; height:60px; z-index:2; position: absolute; top:-15px; right:60px">
-                            <i class="ni ni-camera-compact"></i>
+                        <a href="{{ route('downloadKtp', ['id' => $order->id]) }}">
+                          <div class="contohgambar" style="position: relative;">
+                            <img class="gambar1 mt--2" src="{{ asset('img/folder.png') }}" onmouseover="this.src='{{ asset('img/folder-hover.png') }}';" onmouseout="this.src='{{ asset('img/folder.png') }}';" style="width:300px; height:60px; position: relative; z-index: 1;" alt="">
+                            <h5 style="position: absolute; z-index: 2; top: 0px; margin-left:10px;">Download file</h5>
+                            <?php $ktp = trim($order->ktp, 'ktp/'); ?>
+                            <h6 style="position: absolute; z-index: 2; top: 25px; color: #9B9B9B; margin-left:10px;">{{ $ktp }}</h6>
                           </div>
                         </a>
-                        <div class="modal fade" id="imagemodal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-                          <div class="modal-dialog">
-                            <div class="modal-content">
-                             <div class="modal-body">
-                               <button type="button" class="close" data-dismiss="modal">
-                                  <span aria-hidden="true">&times;</span>
-                                  <span class="sr-only">Close</span>
-                              </button>
-                              <img src="" class="ktp-preview rounded" style="width: 100%;">
-                             </div>
-                           </div>
-                          </div>
-                        </div>
                       </div>
                       <div class="col mt-3">
                         <h6 class="text-sm-start">Surat Permohonan Penyewaan:</h6>
                         <a href="{{ route('downloadPermohonan', ['id' => $order->id]) }}">
                           <div class="contohgambar" style="position: relative;">
-                            <img class="gambar1 mt--2" src="{{ asset('img/folder.png') }}" onmouseover="this.src='{{ asset('img/folder-hover.png') }}';" onmouseout="this.src='{{ asset('img/folder.png') }}';" style="width:180px; height:60px; position: relative; z-index: 1;" alt="">
+                            <img class="gambar1 mt--2" src="{{ asset('img/folder.png') }}" onmouseover="this.src='{{ asset('img/folder-hover.png') }}';" onmouseout="this.src='{{ asset('img/folder.png') }}';" style="width:300px; height:60px; position: relative; z-index: 1;" alt="">
                             <h5 style="position: absolute; z-index: 2; top: 0px; margin-left:10px;">Download file</h5>
-                            <h6 style="position: absolute; z-index: 2; top: 25px; color: #9B9B9B; margin-left:10px;">{{ $order->surat_permohonan }}</h6>
+                            <?php $surat_permohonan = trim($order->surat_permohonan, 'surat_permohonan/'); ?>
+                            <h6 style="position: absolute; z-index: 2; top: 25px; color: #9B9B9B; margin-left:10px;">{{ $surat_permohonan }}</h6>
                           </div>
                         </a>
                       </div>
-                      <div class="col mt-3">
-                        <h6 class="text-sm-start">Akta Notaris:</h6>
-                        <a href="{{ route('downloadAkta', ['id' => $order->id]) }}">
-                          <div class="contohgambar" style="position: relative;">
-                            <img class="gambar1 mt--2" src="{{ asset('img/folder.png') }}" onmouseover="this.src='{{ asset('img/folder-hover.png') }}';" onmouseout="this.src='{{ asset('img/folder.png') }}';" style="width:180px; height:60px; position: relative; z-index: 1;" alt="">
-                            <h5 style="position: absolute; z-index: 2; top: 0px; margin-left:10px;">Download file</h5>
-                            <h6 style="position: absolute; z-index: 2; top: 25px; color: #9B9B9B; margin-left:10px;">{{ $order->akta_notaris }}</h6>
-                          </div>
-                        </a>
-                      </div>
+                      @if($order->category_order_id =='1')
+                        <div class="col mt-3">
+                          <h6 class="text-sm-start">Akta Notaris:</h6>
+                          <a href="{{ route('downloadAkta', ['id' => $order->id]) }}">
+                            <div class="contohgambar" style="position: relative;">
+                              <img class="gambar1 mt--2" src="{{ asset('img/folder.png') }}" onmouseover="this.src='{{ asset('img/folder-hover.png') }}';" onmouseout="this.src='{{ asset('img/folder.png') }}';" style="width:300px; height:60px; position: relative; z-index: 1;" alt="">
+                              <h5 style="position: absolute; z-index: 2; top: 0px; margin-left:10px;">Download file</h5>
+                              <?php $akta_notaris = trim($order->akta_notaris, 'akta_notaris/'); ?>
+                              <h6 style="position: absolute; z-index: 2; top: 25px; color: #9B9B9B; margin-left:10px;">{{ $akta_notaris }}</h6>
+                            </div>
+                          </a>
+                        </div>
+                      @endif
+                      @if($order->category_order_id =='4')
+                        <div class="col mt-3">
+                          <h6 class="text-sm-start">Surat Pengantar dari RT/RW/Lurah:</h6>
+                          <a href="{{ route('downloadSuratPengantar', ['id' => $order->id]) }}">
+                            <div class="contohgambar" style="position: relative;">
+                              <img class="gambar1 mt--2" src="{{ asset('img/folder.png') }}" onmouseover="this.src='{{ asset('img/folder-hover.png') }}';" onmouseout="this.src='{{ asset('img/folder.png') }}';" style="width:300px; height:60px; position: relative; z-index: 1;" alt="">
+                              <h5 style="position: absolute; z-index: 2; top: 0px; margin-left:10px;">Download file</h5>
+                              <?php $surat_ket = trim($order->surat_ket, 'surat_ket/'); ?>
+                              <h6 style="position: absolute; z-index: 2; top: 25px; color: #9B9B9B; margin-left:10px;">{{ $surat_ket }}</h6>
+                            </div>
+                          </a>
+                        </div>
+                      @endif
                     </div>
                   </div>
                 </div>
@@ -220,7 +218,7 @@
                     <h4><b>Jam</b></h4>
                     <div class="tes">
                       <p class="mt-3">Jam Mulai</p>
-                      <h4 class="mt--4">{{ \Carbon\Carbon::parse($detail->tanggal_mulai)->format('H:i') }}                    </h4>
+                      <h4 class="mt--4">{{ \Carbon\Carbon::parse($detail->tanggal_mulai)->format('H:i') }}</h4>
                     </div>
                     <div class="tes">
                       <p>Jam Selesai</p>
@@ -280,10 +278,26 @@
                       @endif --}}
                     @elseif($tanggal_sekarang > $detail->tanggal_selesai)
                       {{-- <h3 style="color: red">Terlambat {{ $terlambat_belum_ambil->days }} hari {{ $terlambat_belum_ambil->h }} jam</h3> --}}
-                      @if($terlambat_belum_ambil->days >= 1)
-                        <h3 style="color: red">Terlambat {{ $terlambat_belum_ambil->days }} hari</h3>
-                      @elseif($terlambat_belum_ambil->h >= 1)
-                        <h3 style="color: red">Terlambat {{ $terlambat_belum_ambil->h }} jam</h3>
+                      <?php
+                        $denda_hari_belum_ambil = $terlambat_belum_ambil->days * $detail->harga_sewa_perhari;
+                        $denda_jam_belum_ambil = $terlambat_belum_ambil->h * $detail->harga_sewa_perjam;
+                        $tanggal_orderan_mulai = new Carbon($detail->tanggal_mulai);
+                        $tanggal_orderan_selesai = new Carbon($detail->tanggal_selesai);
+                        $selisih = $tanggal_orderan_selesai->diff($tanggal_orderan_mulai);
+                      ?>
+                      @if($selisih->days >= 1)
+                        @if($terlambat_belum_ambil->days >= 1)
+                          <h3 style="color: red">Terlambat {{ $terlambat_belum_ambil->days }} hari</h3>
+                          <h3 style="color: red">Denda {{'Rp.' . number_format($denda_hari_belum_ambil, 2, ",", ".") }}</h3>
+                        @endif
+                      @elseif($selisih->h >= 1)
+                        @if($terlambat_belum_ambil->days >= 1)
+                          <h3 style="color: red">Terlambat {{ $terlambat_belum_ambil->days }} hari</h3>
+                          <h3 style="color: red">Denda {{'Rp.' . number_format($denda_hari_belum_ambil, 2, ",", ".") }}</h3>
+                        @elseif($terlambat_belum_ambil->h >= 1)
+                          <h3 style="color: red">Terlambat {{ $terlambat_belum_ambil->h }} jam</h3>
+                          <h3 style="color: red">Denda {{ $denda_jam_belum_ambil }} hari</h3>
+                        @endif
                       @endif
                     @endif
                     <form action="{{ route('alatMasuk', ['id' => $detail->id]) }}">
@@ -296,11 +310,25 @@
                     <h5>Diambil Pada: <b>{{ Carbon::parse($detail->tanggal_ambil)->locale('id')->isoFormat('dddd, D MMMM YYYY') }}</b> pukul <b>{{ Carbon::parse($detail->tanggal_ambil)->format('H:i:s') }}</b></h5>
                     <h5>Dikembalikan Pada: <b>{{ Carbon::parse($detail->tanggal_kembali)->locale('id')->isoFormat('dddd, D MMMM YYYY') }}</b> pukul <b>{{ Carbon::parse($detail->tanggal_kembali)->format('H:i:s') }}</b></h5>
                     @if($detail->tanggal_kembali > $detail->tanggal_selesai)
-                      @if($harian->days >= 0)
-                        @if($terlambat->days >= 1)
-                          <h3 style="color: red">Terlambat {{ $terlambat->days }} hari {{ $terlambat->h }} jam</h3>
-                        @elseif($terlambat->h >= 1)
+                    <?php
+                      $denda_hari = $terlambat->days * $detail->harga_sewa_perhari;
+                      $denda_jam = $terlambat->h * $detail->harga_sewa_perjam;
+                      $tanggal_orderan_mulai = new Carbon($detail->tanggal_mulai);
+                      $tanggal_orderan_selesai = new Carbon($detail->tanggal_selesai);
+                      $selisih = $tanggal_orderan_selesai->diff($tanggal_orderan_mulai);
+                    ?>
+                      @if($selisih->days >= 1)
+                        @if($terlambat_belum_ambil->days >= 1)
+                          <h3 style="color: red">Terlambat {{ $terlambat->days }} hari</h3>
+                          <h3 style="color: red">Denda {{'Rp.' . number_format($denda_hari, 2, ",", ".") }}</h3>
+                        @endif
+                      @elseif($selisih->h >= 1)
+                        @if($terlambat_belum_ambil->days >= 1)
+                          <h3 style="color: red">Terlambat {{ $terlambat->days }} hari</h3>
+                          <h3 style="color: red">Denda {{'Rp.' . number_format($denda_hari, 2, ",", ".") }}</h3>
+                        @elseif($terlambat_belum_ambil->h >= 1)
                           <h3 style="color: red">Terlambat {{ $terlambat->h }} jam</h3>
+                          <h3 style="color: red">Denda {{ $denda_jam }} hari</h3>
                         @endif
                       @endif
                     @endif

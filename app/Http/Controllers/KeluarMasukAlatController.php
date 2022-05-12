@@ -18,7 +18,7 @@ class KeluarMasukAlatController extends Controller
 {
     public function index()
     {
-        $keluar_masuk_alats = order::paginate(5);
+        $keluar_masuk_alats = order::where('ket_persetujuan_kepala_dinas', '=', 'setuju')->paginate(5);
         $total = DetailOrder::where('status', '=', 'Belum Diambil');
         return view('keluar_masuk_alat', [
             'keluar_masuk_alats' => $keluar_masuk_alats,
@@ -60,7 +60,7 @@ class KeluarMasukAlatController extends Controller
         $order = Order::findOrFail($id);
         $detail = DB::table('detail_orders')->join('orders', 'detail_orders.order_id', '=', 'orders.id')
         ->join('equipments', 'detail_orders.equipment_id', '=', 'equipments.id')
-        ->select('detail_orders.id','equipments.foto', 'equipments.nama', 'orders.tanggal_mulai', 'orders.tanggal_selesai', 'detail_orders.status', 'detail_orders.tanggal_ambil', 'detail_orders.tanggal_kembali')
+        ->select('detail_orders.id','equipments.foto', 'equipments.nama', 'orders.tanggal_mulai', 'orders.tanggal_selesai', 'detail_orders.status', 'detail_orders.tanggal_ambil', 'detail_orders.tanggal_kembali', 'equipments.harga_sewa_perhari', 'equipments.harga_sewa_perjam')
         ->where('detail_orders.order_id', '=', $id)
         ->get();
             return view('detail_keluar_masuk', [

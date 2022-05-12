@@ -17,7 +17,7 @@
               <h2><b>{{ $reschedule->tenant->nama }}</b></h2>
             </div>
             <div class="col-2">
-              <img src="{{ asset('img/logo_pupr.jpeg') }}" style="float:right; width:70px; height:70px;" alt="">
+              <img src="{{ asset('img/logo_kota_pontianak.png') }}" style="float:right; width:70px; height:70px;" alt="">
             </div>
           </div>
         </div>

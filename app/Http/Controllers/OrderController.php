@@ -9,7 +9,9 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use PDF;
 use Illuminate\Support\Facades\Mail;
-use App\Mail\MailNotify;
+use App\Mail\PenyewaanBaru;
+use App\Mail\Tolak;
+use App\Mail\PemberitahuanPenyewaanBerhasil;
 class OrderController extends Controller
 {
     public function index($category)
@@ -17,13 +19,32 @@ class OrderController extends Controller
         $orders =[];
         // dd($category);
         if(!auth()->check() || auth()->user()->jabatan === 'admin'){
-            $orders = Order::where(['category_order_id' => $category])->paginate(5);
+            $orders = Order::where(['category_order_id' => $category])
+            ->whereExists(function ($query) {
+                $query->select(DB::raw(1))
+                      ->from('detail_orders')
+                      ->where('detail_orders.pembatalan', 0)
+                      ->whereColumn('detail_orders.order_id', 'orders.id');
+                    })->paginate(5);
         }
         elseif(!auth()->check() || auth()->user()->jabatan === 'kepala uptd'){
-            $orders =  Order::where(['category_order_id' => $category, 'ket_verif_admin' => 'verif'])->paginate(5);
+            $orders =  Order::where(['category_order_id' => $category, 'ket_verif_admin' => 'verif'])
+            ->whereExists(function ($query) {
+                $query->select(DB::raw(1))
+                      ->from('detail_orders')
+                      ->where('detail_orders.pembatalan', 0)
+                      ->whereColumn('detail_orders.order_id', 'orders.id');
+                    })
+                    ->paginate(5);
         }
         if(!auth()->check() || auth()->user()->jabatan === 'kepala dinas'){
-            $orders =  Order::where(['category_order_id' => $category, 'ket_persetujuan_kepala_uptd' => 'setuju', 'ket_persetujuan_kepala_uptd' => 'setuju'])->paginate(5);
+            $orders =  Order::where(['category_order_id' => $category, 'ket_persetujuan_kepala_uptd' => 'setuju', 'ket_persetujuan_kepala_uptd' => 'setuju'])
+            ->whereExists(function ($query) {
+                $query->select(DB::raw(1))
+                      ->from('detail_orders')
+                      ->where('detail_orders.pembatalan', 0)
+                      ->whereColumn('detail_orders.order_id', 'orders.id');
+                    })->paginate(5);
         }
         return view('order', [
             'orders' => $orders,
@@ -34,7 +55,7 @@ class OrderController extends Controller
     public function show($id)
     {
         $order = Order::findOrFail($id);
-        $detail = DB::table('orders')->join('detail_orders', 'detail_orders.order_id', '=', 'orders.id')->join('equipments', 'detail_orders.equipment_id', '=', 'equipments.id')->where('orders.id', $id)->get();
+        $detail = DB::table('orders')->join('detail_orders', 'detail_orders.order_id', '=', 'orders.id')->join('equipments', 'detail_orders.equipment_id', '=', 'equipments.id')->where('orders.id', '=', $id)->where('detail_orders.pembatalan', '=', 0)->get();
         $equipment = DB::table('equipments')->join('detail_orders', 'detail_orders.equipment_id', '=', 'equipments.id')->get();
         return view('detail_order', [
             'order' => $order,
@@ -56,7 +77,14 @@ class OrderController extends Controller
         ->join('tenants', 'tenants.id', '=', 'orders.tenant_id')
         ->where('ket_persetujuan_kepala_dinas', 'setuju')
         ->whereBetween('orders.created_at', [$tanggal_awal, $tanggal_akhir])
-        ->where('category_order_id', request('category'))->get();
+        ->where('category_order_id', request('category'))
+        ->whereExists(function ($query) {
+            $query->select(DB::raw(1))
+                  ->from('detail_orders')
+                  ->where('detail_orders.pembatalan', 0)
+                  ->whereColumn('detail_orders.order_id', 'orders.id');
+        })
+        ->get();
         // $detail_orders = DB::table('orders')
         // ->join('detail_orders', 'detail_orders.order_id', '=', 'orders.id')
         // ->join('equipments', 'detail_orders.equipment_id', '=', 'equipments.id')
@@ -79,6 +107,12 @@ class OrderController extends Controller
                     $query
                     ->where('nama', 'like', "%{$request->keyword}%")
                     ->orWhere('nama_kegiatan', 'like', "%{$request->keyword}%");
+                })
+                ->whereExists(function ($query) {
+                    $query->select(DB::raw(1))
+                          ->from('detail_orders')
+                          ->where('detail_orders.pembatalan', 0)
+                          ->whereColumn('detail_orders.order_id', 'orders.id');
                 });
             })->orderBy('created_at', 'desc')->paginate($pagination);
         }elseif(!auth()->check() || auth()->user()->jabatan === 'kepala uptd'){
@@ -90,6 +124,12 @@ class OrderController extends Controller
                     $query
                     ->where('nama', 'like', "%{$request->keyword}%")
                     ->orWhere('nama_kegiatan', 'like', "%{$request->keyword}%");
+                })
+                ->whereExists(function ($query) {
+                    $query->select(DB::raw(1))
+                          ->from('detail_orders')
+                          ->where('detail_orders.pembatalan', 0)
+                          ->whereColumn('detail_orders.order_id', 'orders.id');
                 });
             })->orderBy('created_at', 'desc')->paginate($pagination);
         }elseif(!auth()->check() || auth()->user()->jabatan === 'kepala dinas'){
@@ -101,6 +141,12 @@ class OrderController extends Controller
                     $query
                     ->where('nama', 'like', "%{$request->keyword}%")
                     ->orWhere('nama_kegiatan', 'like', "%{$request->keyword}%");
+                })
+                ->whereExists(function ($query) {
+                    $query->select(DB::raw(1))
+                          ->from('detail_orders')
+                          ->where('detail_orders.pembatalan', 0)
+                          ->whereColumn('detail_orders.order_id', 'orders.id');
                 });
             })->orderBy('created_at', 'desc')->paginate($pagination);
         }
@@ -158,6 +204,14 @@ class OrderController extends Controller
             //redirect dengan pesan sukses
             // Mail::to($result->email)->send(new MailNotify($result->username));
             // return $result;
+            $data = DB::table('orders')
+            ->join('tenants', 'orders.tenant_id', '=', 'tenants.id')->where('orders.id', '=', $tes)->first();
+            $staff = DB::table('users')
+            ->where('jabatan', '=', 'kepala uptd')->first();
+            // $data['nama_instansi'] = $tes->nama_instansi;
+            $position='admin_to_kepala_uptd';
+            Mail::to($staff->email)->send(new PenyewaanBaru($data, $position));
+
             return redirect()->action([DokumenSewaController::class, 'dokumenSewa'], ['id' => $tes]);
         } else {
             //redirect dengan pesan error
@@ -166,6 +220,7 @@ class OrderController extends Controller
     }
 
     public function tolakAdmin(Request $request, Order $id){
+        $tes=$id->id;
         $validated = $request->validate([
             'alasan' => 'string',
         ]);
@@ -180,6 +235,11 @@ class OrderController extends Controller
 
         if ($result) {
             //redirect dengan pesan sukses
+            $data = DB::table('orders')
+            ->join('tenants', 'orders.tenant_id', '=', 'tenants.id')->where('orders.id', '=', $tes)->first();
+            $status='penyewaan';
+            $alasan=$validated['alasan'];
+            Mail::to($data->email)->send(new Tolak($data, $status, $alasan));
             return redirect()->route('index', ['category' => '1'])->with('success', 'Penolakan pengajuan penyewaan berhasil!');
         } else {
             //redirect dengan pesan error
@@ -205,6 +265,7 @@ class OrderController extends Controller
         // echo "<h3><i>Upload Tanda Tangan Berhasil..</i><h3>";
 
         if($file) {
+            $tes=$id->id;
             $sukses = DB::transaction(function () use ($id, $file) {
             $id->update([
                 'ket_persetujuan_kepala_uptd' => 'setuju',
@@ -215,6 +276,13 @@ class OrderController extends Controller
 
             if ($sukses) {
                 //redirect dengan pesan sukses
+                $data = DB::table('orders')
+                ->join('tenants', 'orders.tenant_id', '=', 'tenants.id')->where('orders.id', '=', $tes)->first();
+                $staff = DB::table('users')
+                ->where('jabatan', '=', 'kepala dinas')->first();
+                // $data['nama_instansi'] = $tes->nama_instansi;
+                $position='kepala_uptd_to_kepala_dinas';
+                Mail::to($staff->email)->send(new PenyewaanBaru($data, $position));
                 return redirect()->action([DokumenSewaController::class, 'dokumenSewa'], ['id' => $id]);
             } else {
                 //redirect dengan pesan error
@@ -224,6 +292,7 @@ class OrderController extends Controller
     }
 
     public function tolakKepalaUPTD(Request $request, Order $id){
+        $tes=$id->id;
         $validated = $request->validate([
             'alasan' => 'string',
         ]);
@@ -238,6 +307,11 @@ class OrderController extends Controller
 
         if ($result) {
             //redirect dengan pesan sukses
+            $data = DB::table('orders')
+            ->join('tenants', 'orders.tenant_id', '=', 'tenants.id')->where('orders.id', '=', $tes)->first();
+            $status='penyewaan';
+            $alasan=$validated['alasan'];
+            Mail::to($data->email)->send(new Tolak($data, $status, $alasan));
             return redirect()->route('index', ['category' => '1'])->with('success', 'Penolakan pengajuan penyewaan berhasil!');
         } else {
             //redirect dengan pesan error
@@ -279,6 +353,7 @@ class OrderController extends Controller
         // echo "<h3><i>Upload Tanda Tangan Berhasil..</i><h3>";
 
         if($file) {
+            $tes=$id->id;
             $sukses = DB::transaction(function () use ($id, $file) {
             $id->update([
                 'ket_persetujuan_kepala_dinas' => 'setuju',
@@ -300,6 +375,14 @@ class OrderController extends Controller
             // }
             if ($sukses) {
                 //redirect dengan pesan sukses
+                $data = DB::table('orders')
+                ->join('tenants', 'orders.tenant_id', '=', 'tenants.id')->where('orders.id', '=', $tes)->first();
+                $staff = DB::table('users')
+                ->where('jabatan', '=', 'bendahara')->first();
+                // $data['nama_instansi'] = $tes->nama_instansi;
+                $position='kepala_dinas_to_bendahara';
+                Mail::to($staff->email)->send(new PenyewaanBaru($data, $position));
+                Mail::to($data->email)->send(new PemberitahuanPenyewaanBerhasil($data));
                 return redirect()->action([DokumenSewaController::class, 'dokumenSewa'], ['id' => $id]);
             } else {
                 //redirect dengan pesan error
@@ -315,6 +398,7 @@ class OrderController extends Controller
     }
 
     public function tolakKepalaDinas(Request $request, Order $id){
+        $tes=$id->id;
         $validated = $request->validate([
             'alasan' => 'string',
         ]);
@@ -329,6 +413,11 @@ class OrderController extends Controller
 
         if ($result) {
             //redirect dengan pesan sukses
+            $data = DB::table('orders')
+            ->join('tenants', 'orders.tenant_id', '=', 'tenants.id')->where('orders.id', '=', $tes)->first();
+            $status='penyewaan';
+            $alasan=$validated['alasan'];
+            Mail::to($data->email)->send(new Tolak($data, $status, $alasan));
             return redirect()->route('index', ['category' => '1'])->with('success', 'Penolakan pengajuan penyewaan berhasil!');
         } else {
             //redirect dengan pesan error

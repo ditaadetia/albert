@@ -60,7 +60,7 @@ class DatabaseSeeder extends Seeder
         User::create([
             'name' => 'URAY DENI ANDRIYADI, ST',
             'username' => 'yohenis',
-            'email' => 'yoheni1964@gmail.com',
+            'email' => 'ditadetyan@gmail.com',
             'password' => bcrypt('yoheni64'),
             'foto' => 'users/rxl3B3WlAKIaZc8xxXJMORU3IYLdbKK1o42cEKic.jpg',
             'kontak' => '089693838246',
@@ -75,7 +75,7 @@ class DatabaseSeeder extends Seeder
         User::create([
             'name' => 'Ir. FIRAYANTA, MT',
             'username' => 'pujiaswad',
-            'email' => 'puji@gmail.com',
+            'email' => 'ditadetian@student.untan.ac.id',
             'password' => bcrypt('aswadi'),
             'foto' => 'users/rxl3B3WlAKIaZc8xxXJMORU3IYLdbKK1o42cEKic.jpg',
             'kontak' => '085245781234',
@@ -90,7 +90,7 @@ class DatabaseSeeder extends Seeder
         User::create([
             'name' => 'Wilda Nadia Fitria',
             'username' => 'willwillnadia',
-            'email' => 'willnadia@gmail.com',
+            'email' => 'ingforei14@gmail.com',
             'password' => bcrypt('nadine'),
             'foto' => 'users/rxl3B3WlAKIaZc8xxXJMORU3IYLdbKK1o42cEKic.jpg',
             'kontak' => '085245781234',
@@ -544,28 +544,28 @@ class DatabaseSeeder extends Seeder
             'kondisi' => 'Baik'
         ]);
 
-        Order::create([
-            'category_order_id' => 1,
-            'tenant_id' => 1,
-            'nama_instansi' => 'Universitas Tanjungpura',
-            'jabatan' => 'Kepala',
-            'alamat_instansi' => 'Jl.Dr.Prof. Hadari Nawawi',
-            'nama_kegiatan' => 'Jembatan Tayan',
-            'surat_permohonan' => 'permohonan.pdf',
-            'ttd_pemohon' => '',
-            'ktp' => 'ktp.jpg',
-            'akta_notaris' => 'akta.jpg',
-            'surat_ket' => 'suratket.jpg',
-            'ket_verif_admin' => 'belum',
-            'ket_persetujuan_kepala_uptd' => 'belum',
-            'ket_persetujuan_kepala_dinas' => 'belum',
-            'ttd_kepala_uptd' => '',
-            'ttd_kepala_dinas' => '',
-            'ket_konfirmasi' => '',
-            'tanggal_mulai' => '2021-11-25 00:00:00',
-            'tanggal_selesai' => '2021-12-25 00:00:00',
-            'dokumen_sewa' => ''
-        ]);
+        // Order::create([
+        //     'category_order_id' => 1,
+        //     'tenant_id' => 1,
+        //     'nama_instansi' => 'Universitas Tanjungpura',
+        //     'jabatan' => 'Kepala',
+        //     'alamat_instansi' => 'Jl.Dr.Prof. Hadari Nawawi',
+        //     'nama_kegiatan' => 'Jembatan Tayan',
+        //     'surat_permohonan' => 'permohonan.pdf',
+        //     'ttd_pemohon' => '',
+        //     'ktp' => 'ktp.jpg',
+        //     'akta_notaris' => 'akta.jpg',
+        //     'surat_ket' => 'suratket.jpg',
+        //     'ket_verif_admin' => 'belum',
+        //     'ket_persetujuan_kepala_uptd' => 'belum',
+        //     'ket_persetujuan_kepala_dinas' => 'belum',
+        //     'ttd_kepala_uptd' => '',
+        //     'ttd_kepala_dinas' => '',
+        //     'ket_konfirmasi' => '',
+        //     'tanggal_mulai' => '2021-11-25 00:00:00',
+        //     'tanggal_selesai' => '2021-12-25 00:00:00',
+        //     'dokumen_sewa' => ''
+        // ]);
 
         // Order::create([
         //     'tenant_id' => 2,
@@ -866,13 +866,13 @@ class DatabaseSeeder extends Seeder
         //     'dokumen_sewa' => ''
         // ]);
 
-        Detailorder::create([
-            'order_id' => 1,
-            'equipment_id' => 1,
-            'tanggal_ambil' => '2021-11-25 00:00:00',
-            'tanggal_kembali' => '1976-01-01 00:00:00',
-            'status' => 'Belum Diambil'
-        ]);
+        // Detailorder::create([
+        //     'order_id' => 1,
+        //     'equipment_id' => 1,
+        //     'tanggal_ambil' => '2021-11-25 00:00:00',
+        //     'tanggal_kembali' => '1976-01-01 00:00:00',
+        //     'status' => 'Belum Diambil'
+        // ]);
 
         // Detailorder::create([
         //     'order_id' => 1,
@@ -1280,8 +1280,8 @@ class DatabaseSeeder extends Seeder
 
         Tenant::create([
             'nama' => 'Raja Rekha Vahlevie',
-            'foto' => 'tenants/logo_pupr.jpeg',
-            'email' => 'raja_rekha@gmail.com',
+            'foto' => 'tenants/logo_kota_pontianak.png',
+            'email' => 'brightness988@gmail.com',
             'username' => 'raja_rekha',
             'password' => bcrypt('ditacantik'),
             'no_hp' => '081250311586',
@@ -1292,8 +1292,8 @@ class DatabaseSeeder extends Seeder
 
         Tenant::create([
             'nama' => 'Dita Adetia Nadila',
-            'foto' => 'tenants/logo_pupr.jpeg',
-            'email' => 'jinyoungie@gmail.com',
+            'foto' => 'tenants/logo_kota_pontianak.png',
+            'email' => 'ahmadpawji67@gmail.com',
             'username' => 'ditadetian',
             'password' => bcrypt('ditacantik'),
             'no_hp' => '089693838246',

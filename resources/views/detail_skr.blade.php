@@ -16,7 +16,7 @@
               <h2><b>{{ $skr->nama }}</b></h2>
             </div>
             <div class="col-2">
-              <img src="{{ asset('img/logo_pupr.jpeg') }}" style="float:right; width:70px; height:70px;" alt="">
+              <img src="{{ asset('img/logo_kota_pontianak.png') }}" style="float:right; width:70px; height:70px;" alt="">
             </div>
           </div>
         </div>
@@ -152,25 +152,31 @@
                   $tanggal_selesai = new DateTime($equipment->tanggal_selesai);
                   $total_waktu = $tanggal_selesai->diff($tanggal_mulai);
                 ?>
-                <div class="col-md-4">
+                <div class="col-md-4 mt-5">
                   <h4><b>Jumlah</b></h4>
-                  <div class="tes">
-                    <p class="mt-3">Jumlah hari sewa</p>
-                    <h4 class="mt--4">{{ $total_waktu->days }} X {{ 'Rp. ' . number_format($equipment->harga_sewa_perhari, 2, ",", ".") }}</h4>
-                  </div>
-                  <div class="tes">
-                    <p>Jumlah jam sewa</p>
-                    <h4 class="mt--4">{{ $total_waktu->h }} X {{ 'Rp. ' . number_format($equipment->harga_sewa_perjam, 2, ",", ".") }}</h4>
-                  </div>
+                  @if($total_waktu->days>0)
+                    <div class="tes">
+                      <p class="mt-3">Jumlah hari sewa</p>
+                      <h4 class="mt--4">{{ $total_waktu->days }} X {{ 'Rp. ' . number_format($equipment->harga_sewa_perhari, 2, ",", ".") }}</h4>
+                    </div>
+                  @else
+                    <div class="tes">
+                      <p>Jumlah jam sewa</p>
+                      <h4 class="mt--4">{{ $total_waktu->h }} X {{ 'Rp. ' . number_format($equipment->harga_sewa_perjam, 2, ",", ".") }}</h4>
+                    </div>
+                  @endif
                 </div>
-                <div class="col-md-4 text-right" style="padding-right:30px">
+                <div class="col-md-4 text-right mt-5" style="padding-right:30px">
                   <h4><b>Total</b></h4>
-                  <div class="tes">
-                    <h4 class="mt-4">{{ 'Rp. ' . number_format($total_waktu->days * $equipment->harga_sewa_perhari, 2, ",", ".") }}</h4>
-                  </div>
-                  <div class="tes">
-                    <h4 class="mt-4">{{ 'Rp. ' . number_format($total_waktu->h * $equipment->harga_sewa_perjam, 2, ",", ".") }}</h4>
-                  </div>
+                  @if($total_waktu->days>0)
+                    <div class="tes">
+                      <h4 class="mt-4">{{ 'Rp. ' . number_format($total_waktu->days * $equipment->harga_sewa_perhari, 2, ",", ".") }}</h4>
+                    </div>
+                  @else
+                    <div class="tes">
+                      <h4 class="mt-4">{{ 'Rp. ' . number_format($total_waktu->h * $equipment->harga_sewa_perjam, 2, ",", ".") }}</h4>
+                    </div>
+                  @endif
                 </div>
               </div>
               <hr>
@@ -180,7 +186,11 @@
                 </div>
                 <div class="col-6 text-right" style="padding-right:30px">
                   <?php
-                    $jumlah = ($total_waktu->days * $equipment->harga_sewa_perhari) + ($total_waktu->h * $equipment->harga_sewa_perjam);
+                    if($total_waktu->days > 0){
+                      $jumlah = $total_waktu->days * $equipment->harga_sewa_perhari;
+                    }else {
+                      $jumlah = $total_waktu->h * $equipment->harga_sewa_perjam;
+                    }
                     $total = $total + $jumlah
                   ?>
                   <h3>{{ 'Rp. ' . number_format($jumlah, 2, ",", ".") }}</h3>
@@ -190,7 +200,7 @@
           @endforeach
         <div class="row">
           <div class="col-6">
-            <h5>Total yang hasrus dibayar</h5>
+            <h5>Total yang harus dibayar</h5>
           </div>
           <div class="col-6 text-right">
             <h3 style="padding-right:30px"><b>{{ 'Rp. ' . number_format($total, 2, ",", ".") }}</b></h3>

@@ -22,7 +22,7 @@ header("Content-Disposition: attachment; filename=Daftar-Reschedule.xls");
       <link rel="stylesheet" href="assets/vendor/nucleo/css/nucleo.css'" type="text/css">
       <!-- Page plugins -->
       <!-- Argon CSS -->
-      <link rel="shortcut icon" type="image/x-icon" href="{{ asset('img/logo_pupr.jpeg') }}">
+      <link rel="shortcut icon" type="image/x-icon" href="{{ asset('img/logo_kota_pontianak.png') }}">
       <script type="text/javascript" src="assets/js/terbilang.js"></script>
       <style>
         .text-center {

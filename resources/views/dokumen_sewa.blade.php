@@ -11,7 +11,7 @@
         <link rel="stylesheet" href="assets/vendor/nucleo/css/nucleo.css'" type="text/css">
         <!-- Page plugins -->
         <!-- Argon CSS -->
-        <link rel="shortcut icon" type="image/x-icon" href="{{ asset('img/logo_pupr.jpeg') }}">
+        <link rel="shortcut icon" type="image/x-icon" href="{{ asset('img/Logo-Kota-Pontianak-Hitam.jpg') }}">
         <script type="text/javascript" src="assets/js/terbilang.js"></script>
         <style>
             .header {
@@ -96,7 +96,7 @@
     <div class="page2" style="padding-left: 30px; text-align:justify;">
         <div class="row">
             <div class="header">
-                <img src="img/Logo-Kota-Pontianak.jpg" alt="" style="width:100px; height:90px;">
+                <img src="img/Logo-Kota-Pontianak-Hitam.jpg" alt="" style="width:100px; height:90px;">
                 <h5 class="judul text-center">PEMERINTAH KOTA PONTIANAK<br><b><span class="font24">DINAS PEKERJAAN UMUM DAN PENATAAN RUANG</span></b><br><small>Alamat Jalan A. Yani Telpon : +62561-732300 Fax : +62561-747329</small><br><span class="font12"><b>PONTIANAK - KALBAR</b><span></h5>
             </div>
         </div>
@@ -458,7 +458,7 @@
     </div>
     <div class="page4" style="padding:40px">
         <div class="header">
-            <img src="img/Logo-Kota-Pontianak.jpg" alt="" style="width:100px; height:90px;">
+            <img src="img/Logo-Kota-Pontianak-Hitam.jpg" alt="" style="width:100px; height:90px;">
             <h5 class="judul text-center">PEMERINTAH KOTA PONTIANAK<br><b><span class="font24">DINAS PEKERJAAN UMUM DAN PENATAAN RUANG</span></b><br><small>Alamat Jalan A. Yani Telpon : +62561-732300 Fax : +62561-747329</small><br><span class="font12"><b>PONTIANAK - KALBAR</b><span></h5>
         </div>
         <p class="p" style="text-align: right">Pontianak, {{ Carbon::now()->isoFormat('D MMMM YYYY') }}</p>

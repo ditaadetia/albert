@@ -15,6 +15,8 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
 use Symfony\Component\HttpFoundation\Response as HttpFoundationResponse;
 use Illuminate\Support\Facades\Storage;
+use App\Mail\PenyewaanBaru;
+use Illuminate\Support\Facades\Mail;
 
 class OrderController extends Controller
 {
@@ -53,7 +55,16 @@ class OrderController extends Controller
 
     public function index(Request $request, $id)
     {
-        $tenants = DB::table('orders')->where('tenant_id', request('id'))->get();
+        $tenants = DB::table('orders')
+        ->where('tenant_id', request('id'))
+        ->whereExists(function ($query) {
+            $query->select(DB::raw(1))
+                  ->from('detail_orders')
+                  ->where('detail_orders.pembatalan', 0)
+                  ->whereColumn('detail_orders.order_id', 'orders.id');
+                })
+        ->orderByDesc('orders.created_at')
+        ->get();
 
         $data=[];
         foreach ($tenants as $tenant){
@@ -89,6 +100,64 @@ class OrderController extends Controller
                     ->join('detail_orders', 'detail_orders.order_id', '=', 'orders.id')
                     ->join('equipments', 'detail_orders.equipment_id', '=', 'equipments.id')
                     ->select('detail_orders.id','equipments.nama', 'equipments.foto', 'equipments.harga_sewa_perhari', 'equipments.harga_sewa_perjam')
+                    ->where('detail_orders.pembatalan', 0)
+                    ->where('detail_orders.order_id', $tenant->id)
+                    ->orderByDesc('orders.created_at')
+                    ->get()
+            ];
+        }
+        return response()->json($data);
+        // $tenants = DB::table('equipments')->whereBetween('id', [1, 7])->orWhere('nama', 'Lainnya')->get();
+        // return response()->json($tenants);
+    }
+
+    public function cekOrder(Request $request, $id)
+    {
+        $tenants = DB::table('orders')
+        ->where('id', request('id'))
+        ->whereExists(function ($query) {
+            $query->select(DB::raw(1))
+                  ->from('detail_orders')
+                  ->where('detail_orders.pembatalan', 0)
+                  ->whereColumn('detail_orders.order_id', 'orders.id');
+                })
+        ->get();
+
+        $data=[];
+        foreach ($tenants as $tenant){
+            $awal=date_create($tenant->tanggal_mulai);
+            $akhir=date_create($tenant->tanggal_selesai);
+            $t_awal = new DateTime($tenant->tanggal_mulai);
+            $t_awal = $t_awal->modify('+1 day');
+            $t_akhir = new DateTime($tenant->tanggal_selesai);
+            $t_akhir = $t_akhir->modify('+1 day');
+            $period = CarbonPeriod::create($t_awal, $t_akhir);
+            $tes = date('Y-m-d', strtotime($period));
+            $diff=date_diff($awal, $akhir);
+            foreach($period as $date){
+                $month = $date->format('Y-m-d');
+            }
+            $data[]= [
+                'id' => $tenant->id,
+                'nama_instansi' => $tenant->nama_instansi,
+                'created_at' => $tenant->created_at,
+                'month' => $period,
+                'color'=> "#ffd700",
+                'tanggal_mulai' => $tenant->tanggal_mulai,
+                'tanggal_selesai' => $tenant->tanggal_selesai,
+                // 'tanggal_mulai' => date('Y-m-d', strtotime($tenant->tanggal_mulai)),
+                // 'tanggal_selesai' => date('Y-m-d', strtotime($tenant->tanggal_selesai)),
+                'total_hari'=>$diff->days,
+                'total_jam'=>$diff->h,
+                'ket_verif_admin' => $tenant->ket_verif_admin,
+                'ket_persetujuan_kepala_uptd' => $tenant->ket_persetujuan_kepala_uptd,
+                'ket_persetujuan_kepala_dinas' => $tenant->ket_persetujuan_kepala_dinas,
+                'alat' =>
+                    $equipments = DB::table('orders')
+                    ->join('detail_orders', 'detail_orders.order_id', '=', 'orders.id')
+                    ->join('equipments', 'detail_orders.equipment_id', '=', 'equipments.id')
+                    ->select('detail_orders.id','equipments.nama', 'equipments.foto', 'equipments.harga_sewa_perhari', 'equipments.harga_sewa_perjam')
+                    ->where('detail_orders.pembatalan', 0)
                     ->where('detail_orders.order_id', $tenant->id)
                     ->get()
             ];
@@ -160,6 +229,13 @@ class OrderController extends Controller
         });
 
         if($validator) {
+            $data = DB::table('orders')
+                ->join('tenants', 'orders.tenant_id', '=', 'tenants.id')->latest('orders.created_at')->first();
+            $staff = DB::table('users')
+            ->where('jabatan', '=', 'admin')->first();
+            // $data['nama_instansi'] = $tes->nama_instansi;
+            $position='penyewa_to_admin';
+            Mail::to($staff->email)->send(new PenyewaanBaru($data, $position));
             return redirect()->action([formulirSewaController::class, 'formulirSewa'], ['id' => request('id')]);
         }
 
@@ -193,16 +269,16 @@ class OrderController extends Controller
             return $order->save();
         });
 
-        if($validator->fails()){
-            return response()->json($validator->errors());
-        }
+        // if($validator->fails()){
+        //     return response()->json($validator->errors());
+        // }
 
-        if($validator) {
-            return redirect()->action([formulirSewaController::class, 'formulirSewa'], ['id' => request('id')]);
-        }
+        // if($validator) {
+        //     return redirect()->action([formulirSewaController::class, 'formulirSewa'], ['id' => request('id')]);
+        // }
 
         // return response()->json(['Program created successfully.', new OrderResource($result)]);
-        return response()->json(["status" => "success", "success" => true, "message" => "Upload KTP Berhasil!", 'foto' => asset('storage/' . $order->ktp)]);
+        return response()->json(["status" => "success", "success" => true, "message" => "Upload KTP Berhasil!", 'hasil' =>$order->id, 'foto' => asset('storage/' . $order->ktp)]);
         // if ($result){
         // }
     }
@@ -231,9 +307,9 @@ class OrderController extends Controller
             return $order->save();
         });
 
-        if($validator->fails()){
-            return response()->json($validator->errors());
-        }
+        // if($validator->fails()){
+        //     return response()->json($validator->errors());
+        // }
 
         if($validator) {
             return redirect()->action([formulirSewaController::class, 'formulirSewa'], ['id' => request('id')]);
@@ -269,9 +345,9 @@ class OrderController extends Controller
             return $order->save();
         });
 
-        if($validator->fails()){
-            return response()->json($validator->errors());
-        }
+        // if($validator->fails()){
+        //     return response()->json($validator->errors());
+        // }
 
         if($validator) {
             return redirect()->action([formulirSewaController::class, 'formulirSewa'], ['id' => request('id')]);

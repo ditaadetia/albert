@@ -4,7 +4,7 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 <!--===============================================================================================-->
-    <link rel="shortcut icon" type="image/x-icon" href="img/logo_pupr.jpeg">
+    <link rel="shortcut icon" type="image/x-icon" href="img/logo_kota_pontianak.png">
 <!--===============================================================================================-->
 	<link rel="stylesheet" type="text/css" href="{{ asset('assets/Login_v1/vendor/bootstrap/css/bootstrap.min.css') }}">
 <!--===============================================================================================-->
@@ -45,7 +45,7 @@
 		<div class="container-login100">
 			<div class="wrap-login100">
 				<div class="login100-pic js-tilt" data-tilt style="margin-top:-120px !important;">
-          			<img src="img/logo_pupr.jpeg" alt="IMG">
+          			<img src="img/logo_kota_pontianak.png" alt="IMG">
 				</div>
 				<form style="margin-top:-110px !important;" class="form-horizontal" method="post" action="/" name="formLogin" onsubmit="return(validasi());">
 					@csrf

@@ -16,7 +16,7 @@
     <!-- Page plugins -->
     <!-- Argon CSS -->
     <link rel="stylesheet" href="{{ asset('assets/css/argon.css?v=1.2.0" type="text/css') }}">
-    <link rel="shortcut icon" type="image/x-icon" href="{{ asset('img/logo_pupr.jpeg') }}">
+    <link rel="shortcut icon" type="image/x-icon" href="{{ asset('img/logo_kota_pontianak.png') }}">
     <!-- Fonts -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700">
     <!-- Icons -->
@@ -107,14 +107,36 @@
                             <span class="nav-link-text" style="white-space:pre">Pembayaran</span>
                         </a>
                     </li>
-                    <li class="nav-item">
+                    {{-- <li class="nav-item">
                         <a class="nav-link {{ (Request::path() === 'fines' || Request::path() === 'cari-fine') ? 'active' : '' }}" href="{{ route('fines.index') }}">
+                            <i class="ni ni-money-coins text-yellow" aria-hidden="true"></i>
+                            <span class="nav-link-text" style="white-space:pre">Denda</span>
+                        </a>
+                    </li> --}}
+                    <li class="nav-item">
+                        <a class="nav-link {{ (Request::path() === 'denda-terlambat-pengembalian' || Request::path() === 'cari-fine') ? 'active' : '' }}" href="{{ route('denda') }}">
                             <i class="ni ni-money-coins text-yellow" aria-hidden="true"></i>
                             <span class="nav-link-text" style="white-space:pre">Denda</span>
                         </a>
                     </li>
                 @endcan
                 @can('admin_kepalauptd_kepaladinas')
+                    <li class="nav-item">
+                        <a class="nav-link {{ (Request::path() === 'pembatalan' || Request::path() === 'cari-pembatalan') ? 'active' : '' }}" href="{{ route('pembatalan') }}">
+                            <i class="ni ni-money-coins text-red"></i>
+                            <span class="nav-link-text">Pembatalan</span>
+                        </a>
+                    </li>
+                @endcan
+                @can('admin_kepalauptd_kepaladinas')
+                    <li class="nav-item">
+                        <a class="nav-link {{ (Request::path() === 'refunds' || Request::path() === 'cari-refund') ? 'active' : '' }}" href="{{ route('refunds.index') }}">
+                            <i class="ni ni-money-coins text-red"></i>
+                            <span class="nav-link-text">Refund</span>
+                        </a>
+                    </li>
+                @endcan
+                @can('bendahara')
                     <li class="nav-item">
                         <a class="nav-link {{ (Request::path() === 'refunds' || Request::path() === 'cari-refund') ? 'active' : '' }}" href="{{ route('refunds.index') }}">
                             <i class="ni ni-money-coins text-red"></i>
@@ -380,6 +402,18 @@
     <script>
         function previewImage() {
             const image = document.querySelector('#foto');
+            const imgPreview = document.querySelector('.img-preview');
+            imgPreview.style.display = 'block'
+            const oFReader = new FileReader();
+            oFReader.readAsDataURL(image.files[0]);
+            oFReader.onload = function(oFREvent) {
+                imgPreview.src= oFREvent.target.result;
+            }
+        }
+    </script>
+    <script>
+        function previewBuktiRefund() {
+            const image = document.querySelector('#bukti_refund');
             const imgPreview = document.querySelector('.img-preview');
             imgPreview.style.display = 'block'
             const oFReader = new FileReader();

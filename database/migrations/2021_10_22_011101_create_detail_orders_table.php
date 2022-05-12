@@ -20,6 +20,9 @@ class CreateDetailOrdersTable extends Migration
             $table->dateTime('tanggal_ambil')->nullable();
             $table->dateTime('tanggal_kembali')->nullable();
             $table->enum('status', ['Selesai', 'Sedang Dipakai', 'Belum Diambil'])->default('Belum Diambil');
+            $table->boolean('pembatalan')->default(0);
+            $table->boolean('konfirmasi_denda')->default(0);
+            $table->string('alasan')->nullable();
             $table->timestamps();
         });
     }

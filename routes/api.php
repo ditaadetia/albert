@@ -67,11 +67,13 @@ Route::get('/header', function () {
 
 Route::resource('equipments', EquipmentController::class);
 Route::get('equipments-all', [EquipmentController::class, 'all'])->name('all');
+Route::get('equipments-detail/{id}', [EquipmentController::class, 'detail'])->name('detail');
 Route::post('orders/post/{id}', [OrderController::class, 'store'])->name('store');
 Route::post('orders/post/ktp/{id}', [OrderController::class, 'ktp'])->name('ktp');
 Route::post('orders/post/aktaNotaris/{id}', [OrderController::class, 'aktaNotaris'])->name('aktaNotaris');
 Route::post('orders/post/suratPengantar/{id}', [OrderController::class, 'suratPengantar'])->name('suratPengantar');
 Route::get('orders/{id}', [OrderController::class, 'index'])->name('index');
+Route::get('cekOrder/{id}', [OrderController::class, 'cekOrder'])->name('index');
 Route::get('skrPdf/{id}', [paymentController::class, 'skrPdf'])->name('skrPdf');
 Route::get('cekSkr/{id}', [paymentController::class, 'cekSkr'])->name('cekSkr');
 Route::get('skr/{id}', [paymentController::class, 'skr'])->name('skr');
@@ -82,12 +84,14 @@ Route::get('lihat-formulir-order/{id}', [OrderController::class, 'lihatFormulirO
 Route::post('orders/post/ttdPemohon/{id}', [OrderController::class, 'ttdPemohon'])->name('ttdPemohon');
 Route::get('schedule/{id}', [OrderController::class, 'schedule'])->name('schedule');
 Route::get('refunds', [RefundController::class, 'index'])->name('index');
-Route::get('/formulir-sewa/{id}', [formulirSewaController::class, 'formulirSewa'])->name('formulirSewa');
+Route::post('pembatalan/{id}', [RefundController::class, 'pembatalan'])->name('pembatalan');
+Route::get('riwayat-pembatalan/{id}', [RefundController::class, 'riwayatPembatalan'])->name('riwayatPembatalan');
+Route::get('formulir-sewa/{id}', [formulirSewaController::class, 'formulirSewa'])->name('formulirSewa');
 Route::get('downloadDokumenSewa/{id}', [OrderController::class, 'downloadDokumenSewa'])->name('downloadDokumenSewa');
-Route::post('detail-orders/post', [DetailOrderController::class, 'store'])->name('store');
+Route::post('detail-orders/post/{id}', [DetailOrderController::class, 'store'])->name('store');
 Route::get('detail-orders', [DetailOrderController::class, 'index'])->name('index');
-Route::post('refunds', [RefundController::class, 'store'])->name('store');
-Route::post('detail-refunds', [DetailRefundController::class, 'store'])->name('store');
+Route::post('refunds/{id}', [RefundController::class, 'store'])->name('store');
+Route::post('detail-refunds/{id}', [DetailRefundController::class, 'store'])->name('store');
 Route::get('reschedules/{id}', [RescheduleController::class, 'index'])->name('index');
 Route::post('reschedules/post', [RescheduleController::class, 'store'])->name('store');
 Route::post('equipments', [EquipmentController::class, 'store'])->name('store');

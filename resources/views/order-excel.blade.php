@@ -7,11 +7,14 @@
 <?php
 // Skrip berikut ini adalah skrip yang bertugas untuk meng-export data tadi ke excell
 header("Content-type: application/vnd-ms-excel");
-if(Request::path() === 'orders-excel/1') {
+// header("Content-Disposition: attachment; filename=Daftar-Order-Umum.xls");
+if(request('category') === '1') {
   header("Content-Disposition: attachment; filename=Daftar-Order-Umum.xls");
-} elseif(Request::path() === 'orders-excel/2') {
-  header("Content-Disposition: attachment; filename=Daftar-Order-PUPR.xls");
-} elseif(Request::path() === 'orders-excel/3') {
+} elseif(request('category') === '2') {
+  header("Content-Disposition: attachment; filename=Daftar-Order-Rutin.xls");
+} elseif(request('category') === '3') {
+  header("Content-Disposition: attachment; filename=Daftar-Order-Dinas-lain.xls");
+} elseif(request('category') === '4') {
   header("Content-Disposition: attachment; filename=Daftar-Order-Kegiatan-Masyarakat.xls");
 }
 
@@ -25,10 +28,9 @@ if(Request::path() === 'orders-excel/1') {
       <meta name="author" content="Creative Tim">
       <title>SI-ALBERT - UPTD Alat Berat PUPR Kota Pontianak</title>
       <!-- Icons -->
-      <link rel="stylesheet" href="assets/vendor/nucleo/css/nucleo.css'" type="text/css">
       <!-- Page plugins -->
       <!-- Argon CSS -->
-      <link rel="shortcut icon" type="image/x-icon" href="{{ asset('img/logo_pupr.jpeg') }}">
+      <link rel="shortcut icon" type="image/x-icon" href="{{ asset('img/logo_kota_pontianak.png') }}">
       <script type="text/javascript" src="assets/js/terbilang.js"></script>
       <style>
         .text-center {
@@ -52,17 +54,14 @@ if(Request::path() === 'orders-excel/1') {
   <!-- jquery -->
   </head>
   <body>
-    {{-- <?php
-      if(Request::path() === 'orders-excel/1'){
-        $judul='UMUM'
-      }
-    ?> --}}
-    @if(Request::path() === 'orders-excel/1')
-      <center><h3 style="margin-bottom: 24px"><b>REKAPITULASI PENYEWAAN UMUM</b></h3></center>
-    @elseif(Request::path() === 'orders-excel/2')
+    @if(request('category') === '1')
+    <center><h3 style="margin-bottom: 24px"><b>REKAPITULASI PENYEWAAN UMUM</b></h3></center>
+    @elseif(request('category') === '2')
       <center><h3 style="margin-bottom: 24px"><b>REKAPITULASI PENYEWAAN KEGIATAN RUTIN</b></h3></center>
-    @elseif(Request::path() === 'orders-excel/3')
-      <center><h3 style="margin-bottom: 24px"><b>REKAPITULASI PENYEWAAN KEGIATAN MASYARAKAT</b></h3></center>
+    @elseif(request('category') === '3')
+      <center><h3 style="margin-bottom: 24px"><b>REKAPITULASI PENYEWAAN KEGIATAN DINAS LAIN</b></h3></center>
+    @elseif(request('category') === '4')
+      <center><h3 style="margin-bottom: 24px"><b>REKAPITULASI PENYEWAAN KEGIATAN SOSIAL MASYARAKAT</b></h3></center>
     @endif
     <br>
     <table border="1">
@@ -85,6 +84,7 @@ if(Request::path() === 'orders-excel/1') {
       <tbody class="list">
         <?php $no = 0 ?>
         @if($orders->count()>0)
+        <?php $sum = 0 ?>
           @foreach ($orders as $order)
             <?php
               setlocale(LC_TIME, 'id_ID');
@@ -139,7 +139,11 @@ if(Request::path() === 'orders-excel/1') {
               ?>
               <td>
                 @foreach ($detail_orders as $detail_order)
-                  {{ $detail_order->nama }}
+                  <ul>
+                    <li>
+                      {{ $detail_order->nama }}
+                    </li>
+                  </ul>
                 @endforeach
               </td>
               <td style="width: 130px;">
@@ -153,7 +157,14 @@ if(Request::path() === 'orders-excel/1') {
                 <b>{{ 'Rp. ' . number_format($total, 2, ",", ".") }}</b>
               </td>
             </tr>
+            <?php $sum = $total + $sum ?>
           @endforeach
+          <tr>
+            <td colspan="11" style="text-align: center; font-size: 20px"><b>Total </b></td>
+            <td style="text-align: center">
+              <b>{{ 'Rp. ' . number_format($sum, 2, ",", ".") }}</b>
+            </td>
+          </tr>
         @else
           <tr>
             <td colspan="12" align="center">

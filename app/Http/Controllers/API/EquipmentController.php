@@ -26,10 +26,11 @@ class EquipmentController extends Controller
         return response()->json(EquipmentResource::collection($tenants));
     }
 
-    public function show($id)
+    public function detail(Request $request)
     {
-        $equipment = Equipment::findOrFail($id);
-        return response()->json([new EquipmentResource($equipment)]);
+        $orders = DB::table('equipments')->where('id', request('id'))->get();
+        return response()
+        ->json(["status" => "success", "success" => true, "message" => "get Equipment!", 'data' => EquipmentResource::collection($orders)]);
     }
 
     public function store(Request $request)
