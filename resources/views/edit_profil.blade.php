@@ -44,30 +44,23 @@
                             </div>
                           </div>
                         </div>
+                        <hr class="my-4" />
                         <h6 class="heading-small text-muted mb-4">Profil</h6>
                         <div class="pl-lg-4">
                         <div class="row">
-                          <div class="col-lg-6">
+                          <div class="col-lg-4">
                             <div class="form-group">
                               <label class="form-control-label" for="input-nama">Nama</label>
                               <input type="text" id="name" name="name" class="form-control" placeholder="Nama" value="{{ auth()->user()->name }}">
                             </div>
                           </div>
-                          <div class="col-lg-6">
-                            <div class="form-group">
-                              <label class="form-control-label" for="input-username">Username</label>
-                              <input type="text" id="username" name="username" class="form-control" placeholder="Username" value="{{ auth()->user()->username }}">
-                            </div>
-                          </div>
-                        </div>
-                        <div class="row">
-                          <div class="col-lg-6">
+                          <div class="col-lg-4">
                             <div class="form-group">
                               <label class="form-control-label" for="input-email">Email</label>
                               <input type="email" id="email" name="email" class="form-control" placeholder="Email" value="{{ auth()->user()->email }}">
                             </div>
                           </div>
-                          <div class="col-lg-6">
+                          <div class="col-lg-4">
                             <div class="form-group">
                               <label class="form-control-label" for="input-number">No. Handphone</label>
                               <input id="kontak" name="kontak" class="form-control" placeholder="No. Handphone" value="{{ auth()->user()->kontak }}" type="number">

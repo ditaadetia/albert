@@ -10,6 +10,7 @@
   <div class="row justify-content-center align-items-centers">
     <div class="col-12">
       <div class="card shadow" style="border-radius:50px !important;">
+      {{-- <div class="card-header" style="padding-left: 280px; padding-right:280px"> --}}
         <div class="card-header">
           <div class="row">
             <div class="col-10">
@@ -21,6 +22,7 @@
           </div>
         </div>
         <div class="card-body border-0">
+        {{-- <div class="row" style="padding-left: 280px; padding-right:280px"> --}}
           <div class="row">
             <div class="col-8">
               <h5>Receipt</h5>
@@ -109,27 +111,34 @@
                   <h3 style="color:white !important;">Profil Penyewa</h3>
                 </div>
                 <div class="card-body">
+                  <div class="row align-items-center">
+                    <div class="col-12 align-items-center text-center mb-3">
+                      @if($order->tenant->foto != '')
+                        <img src="{{ asset('storage/' . $order->tenant->foto) }}" style="width:180px; height:180px;" alt="">
+                      @else
+                        <img src="{{ asset('storage/tenant/no-pict.png') }}" style="width:180px; height:180px;" alt="">
+                      @endif
+                    </div>
+                  </div>
                   <div class="row">
                     <div class="col-6">
-                      <div class="align-items-center">
-                        @if($order->tenant->foto != '')
-                          <img src="{{ asset('storage/' . $order->tenant->foto) }}" style="width:180px; height:180px;" alt="">
-                        @else
-                          <img src="{{ asset('storage/tenant/no-pict.png') }}" style="width:180px; height:180px;" alt="">
-                        @endif
-                      </div>
                       <div class="col mt-4">
                         <h6 class="text-sm-start">Nama Penyewa:</h6>
                         <h4 class="mt--2">{{ $order->tenant->nama }}</h4>
                       </div>
-                      <div class="col mt-3">
-                        <h6 class="text-sm-start">Kontak:</h6>
+                      <div class="col mt-4">
+                        <h6 class="text-sm-start">No. HP:</h6>
                         <h4 class="mt--2">{{ $order->tenant->no_hp }}</h4>
                       </div>
-                      <div class="col mt-3">
+                      <div class="col mt-4">
                         <h6 class="text-sm-start">Kontak Darurat:</h6>
                         <h4 class="mt--2">{{ $order->tenant->kontak_darurat }}</h4>
                       </div>
+                      <div class="col mt-4">
+                        <h6 class="text-sm-start">Alamat:</h6>
+                        <h4 class="mt--2">{{ $order->tenant->alamat }}</h4>
+                      </div>
+
                     </div>
                     <div class="col-6">
                       <script>
@@ -163,7 +172,7 @@
                           </div>
                         </div>
                       </div> --}}
-                      <div class="col mt-3">
+                      <div class="col mt-2">
                         <h6 class="text-sm-start">KTP:</h6>
                         <a href="{{ route('downloadKtp', ['id' => $order->id]) }}">
                           <div class="contohgambar" style="position: relative;">

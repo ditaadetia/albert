@@ -21,23 +21,22 @@
                     <form action="{{ route('equipments.store') }}" method="POST" class="well" id="block-validate" enctype="multipart/form-data">
                         @csrf
                         @method('POST')
-                        <h6 class="heading-small text-muted mb-4">Detail Alat</h6>
+                        <h4 class="heading-medium text-muted mb-4">Detail Alat</h4>
                         <div class="col-lg-12">
                             <div class="form-group">
                                 <label class="form-control-label" for="input-nama">Nama</label>
                                 <input type="text" id="nama" name="nama" class="form-control" placeholder="Nama" value="{{ old('nama') }}" required>
                             </div>
                         </div>
-                        <div class="col-lg-12">
+                        {{-- <div class="col-lg-12">
                             <div class="form-group">
                                 <label class="form-control-label" for="input-nama">Total Alat</label>
                                 <input type="number" id="total" name="total" class="form-control" placeholder="Total Alat" value="{{ old('total') }}" required>
-                                {{-- <input type="hidden" id="jumlah_tersedia" name="total" class="form-control" value="{{ old('total') }}" required> --}}
                             </div>
-                        </div>
+                        </div> --}}
                         <div class="col-lg-12">
                             <div class="mb-3">
-                                <label for="foto" class="form-label">Foto</label>
+                                <label for="foto" class="form-control-label">Foto</label>
                                 <img class="img-preview img-fluid mb-3 col-sm-5">
                                 <input class="form-control @error('foto') is-invalid @enderror" type="file" id="foto" name="foto" onchange="previewImage()">
                                 @error('foto')

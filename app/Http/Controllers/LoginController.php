@@ -97,7 +97,6 @@ class LoginController extends Controller
             $user->update([
                 'name' => $validated['name'],
                 'email' => $validated['email'],
-                'username' => $validated['username'],
                 'kontak' => $validated['kontak'],
                 'pangkat' => $validated['pangkat'],
                 'nip' => $validated['nip'],

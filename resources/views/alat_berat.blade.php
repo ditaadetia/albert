@@ -1,3 +1,4 @@
+<?php use Carbon\Carbon; ?>
 @extends('layouts.headerPrimary')
 @section('isicard')
 <div class="container-fluid mt--6">
@@ -49,10 +50,11 @@
               <tr style="text-align:center !important;">
                 <th style="color:white !important;" scope="col">No.</th>
                 <th style="color:white !important;" scope="col">Nama</th>
-                <th style="color:white !important;" scope="col">Jumlah Alat Tersedia</th>
+                {{-- <th style="color:white !important;" scope="col">Jumlah Alat Tersedia</th> --}}
                 <th style="color:white !important;" scope="col">Harga Sewa Perjam</th>
                 <th style="color:white !important;" scope="col">Harga Sewa Perhari</th>
-                <th style="color:white !important;" scope="col">Keterangan</th>
+                <th style="color:white !important;" scope="col">Spesifikasi</th>
+                <th style="color:white !important;" scope="col">Status</th>
                 <th></th>
               </tr>
             </thead>
@@ -68,9 +70,9 @@
                     <td>
                       {{ $equipment->nama }}
                     </td>
-                    <td>
+                    {{-- <td>
                       {{ $equipment->jumlah_tersedia }}
-                    </td>
+                    </td> --}}
                     {{-- <td>
                         <img src="{{ asset('storage/' . $equipment->foto) }}" width="200%;">
                     </td> --}}
@@ -80,9 +82,49 @@
                     <td>
                       {{ 'Rp. ' . number_format($equipment->harga_sewa_perhari, 2, ",", ".") }}
                     </td>
-                    <td>
-                      {{ $equipment->keterangan }}
-                    </td>
+                    <td>{{ $equipment->keterangan }}</td>
+                    <?php
+                    // dd($equipment->id);
+                      $schedules= DB::table('schedules')
+                      ->join('detail_orders', 'detail_orders.id', '=', 'schedules.detail_order_id')
+                      ->join('equipments', 'equipments.id', '=', 'detail_orders.equipment_id')
+                      ->where('equipments.id', '=', $equipment->id)
+                      // ->whereBetween(['schedules.tanggal_mulai', 'schedules.tanggal_selesai'], Carbon::now())
+                      ->get()
+                    ?>
+                    <?php $count=0 ?>
+                      <td>
+                        @foreach($schedules as $schedule)
+                          <?php
+                            $currentDate = date('Y-m-d H:i:s', strtotime(Carbon::now()));
+                            $startDate = $schedule->tanggal_mulai;
+                            $endDate = $schedule->tanggal_selesai;
+                            if (($currentDate >= $startDate) && ($currentDate <= $endDate)){
+                              // echo "Current date is not between two dates";
+                              $count++;
+                              // $tes= $count+1
+                            }
+                          ?>
+                        @endforeach
+                        @if($count > 0)
+                          Alat sedang dipakai
+                        @else
+                          Alat tidak sedang dipakai
+                        @endif
+                      </td>
+                      {{-- <td>{{ $count }}</td> --}}
+                    <?php
+                    // $currentDate = date('Y-m-d');
+                    $currentDate = date('Y-m-d', strtotime("05/14/2022"));
+                    $startDate = date('Y-m-d', strtotime("05/10/2022"));
+                    $endDate = date('Y-m-d', strtotime("05/20/2022"));
+                    // dd($currentDate, $startDate, $endDate)
+                    ?>
+                    {{-- @if($schedule > 0)
+                      <td>
+                        {{ $schedule }}
+                      </td>
+                    @endif --}}
                     <td class="text-right">
                       <div class="dropdown">
                         <a class="btn btn-sm btn-icon-only text-light" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

@@ -105,9 +105,9 @@ class PaymentController extends Controller
                 $total= $total + $harga;
             }
             $payment = DB::table('payments')
-                ->join('orders', 'payments.order_id', '=', 'orders.id')->where('payments.order_id', '=', $tes)->select('payments.created_at')->first();
+                ->join('orders', 'payments.order_id', '=', 'orders.id')->where('payments.id', '=', $tes)->select('payments.created_at')->first();
             $skr = DB::table('skr')
-                    ->join('orders', 'skr.order_id', '=', 'orders.id')->where('skr.order_id', '=', $tes)->select('skr.created_at')->first();
+                    ->join('orders', 'skr.order_id', '=', 'orders.id')->join('payments', 'payments.order_id', '=', 'orders.id')->where('payments.id', '=', $tes)->select('skr.created_at')->first();
             $umurSkr = new Carbon($skr->created_at);
             $tanggalPayment = new Carbon($payment->created_at);
             if($tanggalPayment < $umurSkr->addDay(30)){

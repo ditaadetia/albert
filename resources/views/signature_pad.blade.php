@@ -9,7 +9,7 @@
 							<h3 style="color:white !important;">Dokumen Sewa</h3>
 						</div>
 						<div class="card-body">
-							<embed type="application/pdf" src="{{ asset('storage/dokumen_sewa/' . $order->dokumen_sewa) }}" style="width:100%; height: 1200px">
+							<embed type="application/pdf" src="{{ asset('storage/dokumen_sewa/' . $order->dokumen_sewa) }}" style="width:100%; height: 600px">
 						</div>
 					</div>
 				</div>

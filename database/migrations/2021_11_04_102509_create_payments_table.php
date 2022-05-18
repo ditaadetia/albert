@@ -20,7 +20,7 @@ class CreatePaymentsTable extends Migration
             $table->string('metode_pembayaran')->default('');
             $table->string('kode_pembayaran')->default('');
             $table->string('bukti_pembayaran')->default('');
-            $table->integer('total')->default();
+            $table->integer('total')->default(0);
             $table->boolean('konfirmasi_pembayaran')->default(0);
             $table->string('ket_konfirmasi')->default('');
             $table->timestamps();

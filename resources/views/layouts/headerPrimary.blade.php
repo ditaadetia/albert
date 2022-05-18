@@ -24,7 +24,7 @@
     <!-- Argon CSS -->
     <link rel="stylesheet" href="{{ asset('assets/css/argon.css?v=1.2.0') }}" type="text/css">
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/datatable.css') }}">
-    <link rel="stylesheet" href="asset('assets/vendor/font-awesome/css/font-awesome.min.css')s">
+    <link rel="stylesheet" href="asset('assets/vendor/font-awesome/css/font-awesome.min.css')">
     <style>
         .border-double { border: 10px double green; }
     </style>
@@ -100,7 +100,7 @@
                     @can('bendahara')
                         <li class="nav-item">
                             <a class="nav-link {{ (Request::path() === 'skrs' || Request::path() === 'cari-skr') ? 'active' : '' }}" href="{{ route('skrs.index') }}">
-                                <i class="ni ni-money-coins text-green" aria-hidden="true"></i>
+                                <i class="ni ni-money-coins text-black" aria-hidden="true"></i>
                                 <span class="nav-link-text" style="white-space:pre">SKR</span>
                             </a>
                         </li>
@@ -468,7 +468,7 @@
                     <div class="row">
                         <div class="col">
                             <h6 class="card-title text-uppercase text-muted mb-0">Total Reschedule</h6>
-                            <?php $reschedules = DB::table('reschedules')->count(); ?>
+                            <?php $reschedules = DB::table('detail_reschedules')->count(); ?>
                             <span class="h2 font-weight-bold mb-0">{{ $reschedules }}</span>
                         </div>
                         <div class="col-auto">
@@ -609,9 +609,9 @@
 			}
 		});
 	</script>
-    <?php $orders = DB::table('orders')->count(); ?>
-    <?php $refunds = DB::table('refunds')->count(); ?>
-    <?php $reschedules = DB::table('reschedules')->count(); ?>
+    <?php $orders = DB::table('orders')->where('ket_persetujuan_kepala_dinas', '=', 'setuju')->count(); ?>
+    <?php $refunds = DB::table('refunds')->where('ket_persetujuan_kepala_dinas', '=', 'setuju')->count(); ?>
+    <?php $reschedules = DB::table('detail_reschedules')->where('ket_persetujuan_kepala_uptd', '=', 'setuju')->count(); ?>
     <script>
 		var ctx = document.getElementById("chartbar").getContext('2d');
 		var myChart = new Chart(ctx, {
@@ -669,6 +669,10 @@
             }
         }
     </script>
+    <script src='https://cdn.jsdelivr.net/npm/fullcalendar@5.8.0/main.js'></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"
+        integrity="sha512-qTXRIMyZIFb8iQcfjXWCO8+M5Tbc38Qi5WzdPOYZHIlZpzBHG3L3by84BBBOiRGiEb7KKtAOAs5qYdUiZiQNNQ=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     @include('sweetalert::alert')
 </body>
 </html>

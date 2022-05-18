@@ -232,7 +232,7 @@
 				<p style="margin-top: -10px"><b>Kota Pontianak</b></p>
 				<?php $path = public_path('storage');
 				$pdf=$path . '/' . $skr->ttd_kepala_dinas;?>
-				{{-- <img src="{{ $pdf }}" alt="" style="width:60px; height:60px;"> --}}
+				<img src="{{ $pdf }}" alt="" style="width:60px; height:60px;">
 				<p style="text-decoration: underline;"><b>{{ $kepala_dinas->name }}</b></p>
 				<p style="margin-top: -10px"><b>NIP. {{ $kepala_dinas->nip }}</b></p>
 			</td>

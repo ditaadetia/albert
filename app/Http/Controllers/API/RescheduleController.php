@@ -60,6 +60,7 @@ class RescheduleController extends Controller
         foreach ($reschedules as $reschedule){
             $data[]= [
                 'id' => $reschedule->id,
+                'nama_kegiatan' => $reschedule->nama_kegiatan,
                 'created_at' => $reschedule->created_at,
                 'ket_verif_admin' => $reschedule->ket_verif_admin,
                 'ket_persetujuan_kepala_uptd' => $reschedule->ket_persetujuan_kepala_uptd,

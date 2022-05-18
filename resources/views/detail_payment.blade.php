@@ -40,9 +40,9 @@
                   <div class="row align-items-center">
                     <div class="col-12 align-items-center text-center">
                       @if($payment->tenant->foto != '')
-                        <img src="{{ asset('storage/' . $payment->tenant->foto) }}" style="width:180px; height:180px;" alt="">
+                        <img src="{{ asset('storage/' . $payment->tenant->foto) }}" style="width:120px; height:120px;" alt="">
                       @else
-                        <img src="{{ asset('storage/tenant/no-pict.png') }}" style="width:180px; height:180px;" alt="">
+                        <img src="{{ asset('storage/tenant/no-pict.png') }}" style="width:120px; height:120px;" alt="">
                       @endif
                     </div>
                   </div>

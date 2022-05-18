@@ -26,7 +26,7 @@
               <tr style="text-align:center !important;">
                 <th style="color:white !important;" scope="col">No.</th>
                 <th style="color:white !important;" scope="col">Nama</th>
-                <th style="color:white !important;" scope="col">Username</th>
+                <th style="color:white !important;" scope="col">Email</th>
                 {{-- <th style="color:white !important;" scope="col">Nama Instansi</th>
                 <th style="color:white !important;" scope="col">Jabatan</th>
                 <th style="color:white !important;" scope="col">Alamat Instansi</th> --}}
@@ -47,7 +47,7 @@
                       {{ $tenant->nama }}
                     </td>
                     <td>
-                      {{ $tenant->username }}
+                      {{ $tenant->email }}
                     </td>
                     <td>
                       {{ $tenant->no_hp }}

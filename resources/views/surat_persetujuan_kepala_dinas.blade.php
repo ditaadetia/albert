@@ -70,6 +70,18 @@
 <body>
     {{-- <script>window.open('#', '_blank');</script> --}}
     <div class="page2" style="size: 21cm 29.7cm; margin: 30mm 40mm 30mm 40mm;">
+        <div class="row justify-content-center align-items-center mt-5">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header" style="background-color: #364a76">
+                        <h3 style="color:white !important;">Dokumen Sewa</h3>
+                    </div>
+                    <div class="card-body">
+                        <embed type="application/pdf" src="{{ asset('storage/dokumen_sewa/' . $order->dokumen_sewa) }}" style="width:100%; height: 1200px">
+                    </div>
+                </div>
+            </div>
+        </div>
         <div class="card shadow">
             <div class="card-body" style="padding-left: 3cm; padding-right:2cm">
                 <div class="header">
@@ -101,13 +113,13 @@
                     <p class="p" style="text-align: center;">KEPALA DINAS PEKERJAAN UMUM DAN PENATAAN RUANG KOTA PONTIANAK</p>
                     @if($order->ket_persetujuan_kepala_dinas == 'belum' OR $order->ket_persetujuan_kepala_dinas == 'tolak' OR $order->ttd_kepala_dinas =='')
                     <br><br><br>
-                @else
-                    <img src="public_path('storage/{{ $order->ttd_kepala_dinas }}')" alt="" style="width:60px; height:60px;">
-                @endif
-                <p class="p" style="text-decoration: underline; text-align:center"><b style="margin-top: -12px; font-weight:bold">{{ $kepala_dinas->name }}</b><br>
-                    <p class="p" style="margin-top: -12px; text-align:center">{{ $kepala_dinas->pangkat }}</p>
-                    <p class="p" style="margin-top: -12px; text-align:center">{{ $kepala_dinas->nip }}</p>
-                </p>
+                    @else
+                        <img src="public_path('storage/{{ $order->ttd_kepala_dinas }}')" alt="" style="width:60px; height:60px;">
+                    @endif
+                    <p class="p" style="text-decoration: underline; text-align:center"><b style="margin-top: -12px; font-weight:bold">{{ $kepala_dinas->name }}</b><br>
+                        <p class="p" style="margin-top: -12px; text-align:center">{{ $kepala_dinas->pangkat }}</p>
+                        <p class="p" style="margin-top: -12px; text-align:center">{{ $kepala_dinas->nip }}</p>
+                    </p>
                 </div>
             </div>
             <div class="card-footer">

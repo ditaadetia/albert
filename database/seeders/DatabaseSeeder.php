@@ -1281,7 +1281,7 @@ class DatabaseSeeder extends Seeder
         Tenant::create([
             'nama' => 'Raja Rekha Vahlevie',
             'foto' => 'tenants/logo_kota_pontianak.png',
-            'email' => 'brightness988@gmail.com',
+            'email' => 'shiningg988@gmail.com',
             'username' => 'raja_rekha',
             'password' => bcrypt('ditacantik'),
             'no_hp' => '081250311586',
@@ -1293,7 +1293,7 @@ class DatabaseSeeder extends Seeder
         Tenant::create([
             'nama' => 'Dita Adetia Nadila',
             'foto' => 'tenants/logo_kota_pontianak.png',
-            'email' => 'ahmadpawji67@gmail.com',
+            'email' => 'kittybright988@gmail.com',
             'username' => 'ditadetian',
             'password' => bcrypt('ditacantik'),
             'no_hp' => '089693838246',

@@ -209,7 +209,7 @@
             @can('bendahara')
               @if($equipment->ket_persetujuan_kepala_dinas === 'setuju')
                 <form action="{{ route('refundBendahara', ['id' => $equipment->id]) }}" style="margin: 16px">
-                  <button type="button" name="verifikasi" class="btn btn-success"><span class="ni ni-check-bold" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="Kembalikan Dana"></span> Kembalikan Dana</button>
+                  {{-- <button type="button" name="verifikasi" class="btn btn-success"><span class="ni ni-check-bold" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="Kembalikan Dana"></span> Kembalikan Dana</button> --}}
                   <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="Penolakan Pengajuan"><span class="ni ni-fat-remove"></span> Kembalikan Dana</button>
                 </form>
               @endif
@@ -278,7 +278,30 @@
                       </form>
                     @endcan
                     @can('bendahara')
-                      <h5 class="modal-title" id="exampleModalLabel">Pengembalian Dana</h5>
+                      <form action="{{ route('refundBendahara', ['id' => $equipment->id]) }}" method="post" class="well" id="block-validate" enctype="multipart/form-data">
+                        @csrf
+                        @method('PUT')
+                        <div class="pl-lg-4">
+                          <div class="row">
+                            <div class="col-md-9">
+                              <div class="form-group">
+                                <img class="img-preview img-fluid mb-3 col-sm-5">
+                                <input class="form-control @error('bukti_refund') is-invalid @enderror" type="file" id="foto" name="bukti_refund" onchange="previewImage()" style="margin-top:16px;">
+                                @error('bukti_refund')
+                                  <div class="invalid-feedback">
+                                      {{ $message }}
+                                  </div>
+                                @enderror
+                              </div>
+                            </div>
+                            <span class="help-block" style="margin-left: 16px">Silahkan upload bukti pengembalian dana.</span>
+                          </div>
+                        </div>
+                        <div class="modal-footer">
+                          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                          <button type="submit" name="tolak" class="btn btn-success"><span class="ni ni-check-bold"></span> Submit</button>
+                        </div>
+                      </form>
                     @endcan
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                   </div>
@@ -293,32 +316,6 @@
                   @endcan
                   @can('bendahara')
                     <form action="{{ route('refundBendahara', ['id' => $equipment->id]) }}" method="post" class="well" id="block-validate" enctype="multipart/form-data">
-                      @csrf
-                      @method('PUT')
-                      <div class="pl-lg-4">
-                        <div class="row">
-                          <div class="col-md-9">
-                            <div class="form-group">
-                              <img class="img-preview img-fluid mb-3 col-sm-5">
-                              <input class="form-control @error('bukti_refund') is-invalid @enderror" type="file" id="foto" name="bukti_refund" onchange="previewImage()" style="margin-top:16px;">
-                              @error('bukti_refund')
-                                <div class="invalid-feedback">
-                                    {{ $message }}
-                                </div>
-                              @enderror
-                            </div>
-                          </div>
-                          <span class="help-block" style="margin-left: 16px">Silahkan upload bukti pengembalian dana.</span>
-                        </div>
-                      </div>
-                      <div class="col-12 text-right">
-                        <button type="submit" name="update" class="btn btn-warning"><span class="fa fa-save"></span> Simpan</button>
-                      </div>
-                      <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="submit" name="tolak" class="btn btn-success"><span class="ni ni-check-bold"></span> Submit</button>
-                      </div>
-                    </form>
                   @endcan
                 </div>
               </div>

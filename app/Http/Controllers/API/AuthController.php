@@ -94,7 +94,7 @@ class AuthController extends Controller
                 'no_hp' => $user->no_hp,
                 'kontak_darurat' => $user->kontak_darurat,
                 'alamat' => $user->alamat,
-                'foto' => asset('storage/' . $user->foto),
+                'foto' => asset('storage/tenants' . $user->foto),
                 ]]
         ];
         return response()

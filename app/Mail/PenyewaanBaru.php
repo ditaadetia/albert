@@ -40,10 +40,6 @@ class PenyewaanBaru extends Mailable
                         'tanggal_mulai' => $this->data->tanggal_mulai,
                         'tanggal_selesai' => $this->data->tanggal_selesai,
                         'position' => $this->position,
-                    ])
-                    ->attach(public_path() . '/storage' .'/dokumen_sewa/'. $this->data->dokumen_sewa, [
-                        'as' => $this->data->dokumen_sewa,
-                        'mime' => 'application/pdf',
                     ]);
     }
 }

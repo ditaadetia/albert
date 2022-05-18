@@ -24,8 +24,11 @@ class OrderController extends Controller
                 $query->select(DB::raw(1))
                       ->from('detail_orders')
                       ->where('detail_orders.pembatalan', 0)
+                      ->where('orders.ttd_pemohon', '!=', '')
                       ->whereColumn('detail_orders.order_id', 'orders.id');
-                    })->paginate(5);
+                    })
+                    ->orderByDesc('orders.created_at')
+                    ->paginate(5);
         }
         elseif(!auth()->check() || auth()->user()->jabatan === 'kepala uptd'){
             $orders =  Order::where(['category_order_id' => $category, 'ket_verif_admin' => 'verif'])
@@ -33,8 +36,10 @@ class OrderController extends Controller
                 $query->select(DB::raw(1))
                       ->from('detail_orders')
                       ->where('detail_orders.pembatalan', 0)
+                      ->where('orders.ttd_pemohon', '!=', '')
                       ->whereColumn('detail_orders.order_id', 'orders.id');
                     })
+                    ->orderByDesc('orders.created_at')
                     ->paginate(5);
         }
         if(!auth()->check() || auth()->user()->jabatan === 'kepala dinas'){
@@ -43,8 +48,11 @@ class OrderController extends Controller
                 $query->select(DB::raw(1))
                       ->from('detail_orders')
                       ->where('detail_orders.pembatalan', 0)
+                      ->where('orders.ttd_pemohon', '!=', '')
                       ->whereColumn('detail_orders.order_id', 'orders.id');
-                    })->paginate(5);
+                    })
+                    ->orderByDesc('orders.created_at')
+                    ->paginate(5);
         }
         return view('order', [
             'orders' => $orders,
@@ -211,7 +219,6 @@ class OrderController extends Controller
             // $data['nama_instansi'] = $tes->nama_instansi;
             $position='admin_to_kepala_uptd';
             Mail::to($staff->email)->send(new PenyewaanBaru($data, $position));
-
             return redirect()->action([DokumenSewaController::class, 'dokumenSewa'], ['id' => $tes]);
         } else {
             //redirect dengan pesan error
@@ -323,7 +330,7 @@ class OrderController extends Controller
         $order = DB::table('orders')
         ->join('tenants', 'orders.tenant_id', '=', 'tenants.id')
         ->where('orders.id', $id)
-        ->select('orders.id', 'orders.nama_instansi', 'tenants.nama', 'orders.nama_kegiatan', 'ket_persetujuan_kepala_dinas', 'ttd_kepala_dinas')
+        ->select('orders.id', 'orders.dokumen_sewa', 'orders.nama_instansi', 'tenants.nama', 'orders.nama_kegiatan', 'ket_persetujuan_kepala_dinas', 'ttd_kepala_dinas')
         ->first();
 
         $detail = DB::table('orders')

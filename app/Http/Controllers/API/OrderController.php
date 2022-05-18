@@ -83,11 +83,13 @@ class OrderController extends Controller
             $data[]= [
                 'id' => $tenant->id,
                 'nama_instansi' => $tenant->nama_instansi,
+                'nama_kegiatan' => $tenant->nama_kegiatan,
                 'created_at' => $tenant->created_at,
                 'month' => $period,
                 'color'=> "#ffd700",
                 'tanggal_mulai' => $tenant->tanggal_mulai,
                 'tanggal_selesai' => $tenant->tanggal_selesai,
+                'ttd_pemohon' => $tenant->ttd_pemohon,
                 // 'tanggal_mulai' => date('Y-m-d', strtotime($tenant->tanggal_mulai)),
                 // 'tanggal_selesai' => date('Y-m-d', strtotime($tenant->tanggal_selesai)),
                 'total_hari'=>$diff->days,
@@ -361,7 +363,7 @@ class OrderController extends Controller
 
     public function lihatFormulirOrder(Request $request)
     {
-        $orders = Order::latest()->where('tenant_id', request('id'))->first();
+        $orders = Order::latest()->where('id', request('id'))->first();
         $pathToFile = public_path() . '/storage/surat_permohonan/' . $orders->surat_permohonan;
 
         return response()->file($pathToFile);
@@ -377,7 +379,7 @@ class OrderController extends Controller
             'ttd_pemohon' => 'file|mimes:png,jpg,jpeg,pdf,doc,docx',
         ]);
 
-        $order = Order::latest()->where('tenant_id', request('id'))->first();
+        $order = Order::Where('id', request('id'))->first();
 
         $result = DB::transaction(function () use ($validator, $request, $order) {
             $order->update([

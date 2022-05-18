@@ -73,12 +73,12 @@ class formulirSewaController extends Controller
         $pdf = PDF::loadView('surat_permohonan', ['orders' => $orders, 'order1' => $order1, 'detail1' => $detail1, 'detail_orders' => $detail_orders, 'kepala_uptd' =>$kepala_uptd, 'kepala_dinas' =>$kepala_dinas]);
         $pdf->setPaper('A4', 'potrait');
         $path = public_path('storage/surat_permohonan');
-        $pdf->save($path . '/' . 'surat_permohonan_' . $orders->nama_instansi .'_'. $orders->id . '.pdf');
+        $pdf->save($path . '/' . 'surat_permohonan_' . $orders->nama_kegiatan .'_'. $orders->id . '.pdf');
 
         // $id_dok=Order::where('id', $id)->select('id');
         Order::latest()->where('tenant_id', request('id'))->first()
         ->update([
-            'surat_permohonan' => 'surat_permohonan_' . $orders->nama_instansi .'_'. $orders->id . '.pdf'
+            'surat_permohonan' => 'surat_permohonan_' . $orders->nama_kegiatan .'_'. $orders->id . '.pdf'
         ]);
         return response()->json(["status" => "success", "success" => true, "message" => "Berhasil!"]);
         // return redirect()->route('index', ['category' => '1'])->with('success', 'Verifikasi pengajuan penyewaan berhasil!');

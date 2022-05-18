@@ -123,6 +123,7 @@ class RefundController extends Controller
             $data[]= [
                 'id' => $tenant->id,
                 'nama_instansi' => $tenant->nama_instansi,
+                'nama_kegiatan' => $tenant->nama_kegiatan,
                 'created_at' => $tenant->created_at,
                 'month' => $period,
                 'color'=> "#ffd700",

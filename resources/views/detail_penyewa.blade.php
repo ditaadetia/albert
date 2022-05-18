@@ -37,7 +37,7 @@
                 <h4><b>{{ $tenant->nama }}</b></h4>
               </div>
             </div>
-            <div class="row">
+            {{-- <div class="row">
               <div class="col-3">
                 <h4>Username</h4>
               </div>
@@ -47,7 +47,7 @@
               <div class="col-8">
                 <h4><b>{{ $tenant->username }}</b></h4>
               </div>
-            </div>
+            </div> --}}
             <div class="row">
               <div class="col-3">
                 <h4>Email</h4>
@@ -59,7 +59,7 @@
                 <h4><b>{{ $tenant->email }}</b></h4>
               </div>
             </div>
-            <div class="row">
+            {{-- <div class="row">
               <div class="col-3">
                 <h4>Nama Bidang Hukum</h4>
               </div>
@@ -69,7 +69,7 @@
               <div class="col-8">
                 <h4><b>{{ $tenant->nama_instansi }}</b></h4>
               </div>
-            </div>
+            </div> --}}
             <div class="row">
               <div class="col-3">
                 <h4>No. HP</h4>
@@ -89,7 +89,7 @@
                 :
               </div>
               <div class="col-8">
-                <h4><b>{{ $tenant->kontak }}</b></h4>
+                <h4><b>{{ $tenant->kontak_darurat }}</b></h4>
               </div>
             </div>
             <div class="row">

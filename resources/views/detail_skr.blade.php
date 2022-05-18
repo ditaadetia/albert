@@ -10,6 +10,7 @@
   <div class="row justify-content-center align-items-centers">
     <div class="col-12">
       <div class="card shadow" style="border-radius:50px !important;">
+        {{-- <div class="card-header" style="padding-left: 200px; padding-right:200px"> --}}
         <div class="card-header">
           <div class="row">
             <div class="col-10">
@@ -21,6 +22,7 @@
           </div>
         </div>
         <div class="card-body border-0">
+          {{-- <div class="row" style="padding-left: 200px; padding-right:200px"> --}}
           <div class="row">
             <div class="col-8">
               <h5>Receipt</h5>
@@ -47,17 +49,21 @@
                   </div>
                   <div class="row">
                     <div class="col-6">
-                      <div class="col mt-3">
+                      <div class="col mt-2">
                         <h6 class="text-sm-start">Nama Penyewa:</h6>
                         <h4 class="mt--2">{{ $skr->nama }}</h4>
                       </div>
-                      <div class="col mt-5">
+                      <div class="col mt-2">
                         <h6 class="text-sm-start">Kontak:</h6>
                         <h4 class="mt--2">{{ $skr->no_hp }}</h4>
                       </div>
-                      <div class="col mt-5">
+                      <div class="col mt-2">
                         <h6 class="text-sm-start">Kontak Darurat:</h6>
                         <h4 class="mt--2">{{ $skr->kontak_darurat }}</h4>
+                      </div>
+                      <div class="col mt-2">
+                        <h6 class="text-sm-start">Alamat:</h6>
+                        <h4 class="mt--2">{{ $skr->alamat }}</h4>
                       </div>
                     </div>
                     <div class="col-6">

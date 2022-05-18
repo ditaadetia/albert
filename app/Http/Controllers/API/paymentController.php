@@ -85,6 +85,7 @@ class paymentController extends Controller
         $validator = $request->validate([
             'tenant_id' => 'required|integer',
             'order_id' => 'required|integer',
+            'total' => 'required|integer',
         ]);
 
         $order = DB::table('payments')->get();

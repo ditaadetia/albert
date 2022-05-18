@@ -16,6 +16,7 @@
         "postcss": "^8.1.14"
     },
     "dependencies": {
+        "@react-native-async-storage/async-storage": "^1.17.4",
         "chart.js": "^3.6.2",
         "expo-font": "^10.0.4",
         "php": "^1.0.2",

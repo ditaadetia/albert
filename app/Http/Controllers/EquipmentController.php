@@ -24,7 +24,7 @@ class EquipmentController extends Controller
     {
         $validated = $request->validate([
             'nama' => 'required|string',
-            'total' => 'required|integer',
+            // 'total' => 'required|integer',
             'foto' => 'image|file|max:1024',
             'jenis' => 'required|string',
             'kegunaan' => 'required|string',
@@ -97,7 +97,7 @@ class EquipmentController extends Controller
     {
         $validated = $request->validate([
             'nama' => 'required|string',
-            'total' => 'required|integer',
+            // 'total' => 'required|integer',
             'foto' => 'file|max:1024|mimes:png,jpg,jpeg',
             'jenis' => 'required|string',
             'kegunaan' => 'required|string',
@@ -110,8 +110,8 @@ class EquipmentController extends Controller
         $result = DB::transaction(function () use ($validated, $request, $equipment) {
             $equipment->update([
                 'nama' => $validated['nama'],
-                'total' => $validated['total'],
-                'jumlah_tersedia' => $validated['total'],
+                // 'total' => $validated['total'],
+                // 'jumlah_tersedia' => $validated['total'],
                 'jenis' => $validated['jenis'],
                 'kegunaan' => $validated['kegunaan'],
                 'harga_sewa_perjam' => $validated['harga_sewa_perjam'],

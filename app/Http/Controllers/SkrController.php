@@ -17,6 +17,7 @@ class SkrController extends Controller
     public function index()
     {
         $skrs = Order::where(['ket_persetujuan_kepala_dinas' => 'setuju',  'category_order_id' => 1])
+        ->orderByDesc('orders.created_at')
         ->paginate(5);
 
         return view('skr', [
@@ -31,7 +32,7 @@ class SkrController extends Controller
         // ->join('detail_orders', 'detail_orders.order_id', '=', 'orders.id')
         ->join('tenants', 'orders.tenant_id', '=', 'tenants.id')
         ->where('orders.id', $id)
-        ->select('orders.id', 'tenants.nama', 'tenants.foto', 'tenants.no_hp', 'tenants.kontak_darurat')
+        ->select('orders.id', 'tenants.nama', 'tenants.foto', 'tenants.no_hp', 'tenants.kontak_darurat', 'tenants.alamat')
         ->first();
 
         return view('detail_skr', [

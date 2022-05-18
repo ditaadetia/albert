@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use App\Mail\pemberitahuanPembayaran;
+use App\Mail\PemberitahuanRefund;
 use App\Mail\Tolak;
 
 class RefundController extends Controller
@@ -462,7 +463,7 @@ class RefundController extends Controller
         if ($result) {
             //redirect dengan pesan sukses
             Mail::to($staff->email)->send(new Refunds($data, $total_bayar, $position));
-            Mail::to($data->email)->send(new Refunds($data, $total_bayar, $position));
+            Mail::to($data->email)->send(new PemberitahuanRefund($data, $total_bayar, $position));
             return redirect()->route('hapusSchedule', ['id' => $id])->with('success', 'Persetujuan pengajuan refund berhasil!');
         } else {
             //redirect dengan pesan error

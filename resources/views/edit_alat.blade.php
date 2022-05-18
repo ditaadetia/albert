@@ -28,15 +28,15 @@
                             <input type="text" id="nama" name="nama" class="form-control" placeholder="Nama" value="{{ old('nama', $equipment->nama) }}" required>
                         </div>
                     </div>
-                    <div class="col-lg-12">
+                    {{-- <div class="col-lg-12">
                         <div class="form-group">
                             <label class="form-control-label" for="input-nama">Total Alat</label>
                             <input type="number" id="total" name="total" class="form-control" placeholder="Total Alat" value="{{ old('total', $equipment->total) }}" required>
                         </div>
-                    </div>
+                    </div> --}}
                     <div class="col-lg-12">
                         <div class="mb-3">
-                            <label for="foto" class="form-label">Foto</label>
+                            <label for="foto" class="form-control-label">Foto</label>
                             <img class="img-preview img-fluid mb-3 col-sm-5">
                             <input class="form-control @error('foto') is-invalid @enderror" type="file" id="foto" name="foto" onchange="previewImage()">
                             @error('foto')
